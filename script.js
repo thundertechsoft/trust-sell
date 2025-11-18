@@ -1,43 +1,38 @@
 // ===== TRUST SELL - COMPLETE JAVASCRIPT =====
 
-// Firebase Configuration (Aap apni API key yahan dalenge)
+// Firebase Configuration
 const firebaseConfig = {
-    apiKey: "YOUR_FIREBASE_API_KEY",
-    authDomain: "trust-sell.firebaseapp.com",
-    projectId: "trust-sell",
-    storageBucket: "trust-sell.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBJ9mLHHQxnJKtixZrOYy_Vtf-TuwED2dE",
+    authDomain: "trustsell-78c18.firebaseapp.com",
+    databaseURL: "https://trustsell-78c18-default-rtdb.firebaseio.com",
+    projectId: "trustsell-78c18",
+    storageBucket: "trustsell-78c18.firebasestorage.app",
+    messagingSenderId: "909095926042",
+    appId: "1:909095926042:web:3c6eee4f055d21fda794a3",
+    measurementId: "G-4V0DBSRYKW"
 };
 
 // Initialize Firebase
-// firebase.initializeApp(firebaseConfig);
-
-// AI Security Configuration
-const AIConfig = {
-    apiKey: "YOUR_CHATGPT_API_KEY",
-    securityLevel: "high",
-    autoModeration: true
-};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
 // Global State Management
 const AppState = {
     currentUser: null,
     isLoggedIn: false,
-    userType: null,
+    userData: null,
     cart: [],
-    favorites: [],
-    currentPage: 'home'
+    favorites: []
 };
 
-// ===== DOM CONTENT LOADED =====
+// ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     setupEventListeners();
-    loadInitialData();
 });
 
-// ===== INITIALIZATION FUNCTIONS =====
 function initializeApp() {
     console.log('🚀 Trust Sell App Initializing...');
     
@@ -49,9 +44,64 @@ function initializeApp() {
     
     // Load user preferences
     loadUserPreferences();
+}
+
+function checkAuthStatus() {
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            AppState.currentUser = user;
+            AppState.isLoggedIn = true;
+            
+            // Load user data from Firestore
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    AppState.userData = userDoc.data();
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+            
+            updateAuthUI();
+        } else {
+            AppState.currentUser = null;
+            AppState.isLoggedIn = false;
+            AppState.userData = null;
+            updateAuthUI();
+        }
+    });
+}
+
+function updateAuthUI() {
+    const authLinks = document.querySelectorAll('.auth-link');
+    const profileLinks = document.querySelectorAll('.profile-link');
     
-    // Initialize AI security
-    initializeAISecurity();
+    if (AppState.isLoggedIn) {
+        authLinks.forEach(link => {
+            link.textContent = 'My Profile';
+            link.href = 'profile.html';
+        });
+        
+        profileLinks.forEach(link => {
+            link.style.display = 'block';
+        });
+        
+        // Update user name if available
+        if (AppState.userData) {
+            document.querySelectorAll('.user-name').forEach(element => {
+                element.textContent = AppState.userData.name;
+            });
+        }
+    } else {
+        authLinks.forEach(link => {
+            link.textContent = 'Login';
+            link.href = 'auth.html';
+        });
+        
+        profileLinks.forEach(link => {
+            link.style.display = 'none';
+        });
+    }
 }
 
 function initializeAnimations() {
@@ -76,460 +126,91 @@ function initializeAnimations() {
     });
 }
 
-function initializeAISecurity() {
-    console.log('🛡️ AI Security System Initialized');
-    
-    // Monitor for suspicious activities
-    monitorUserBehavior();
-    
-    // Initialize content moderation
-    initializeContentModeration();
-    
-    // Setup fraud detection
-    setupFraudDetection();
-}
-
-// ===== AUTHENTICATION FUNCTIONS =====
-function checkAuthStatus() {
-    const savedUser = localStorage.getItem('trustSellUser');
-    if (savedUser) {
-        AppState.currentUser = JSON.parse(savedUser);
-        AppState.isLoggedIn = true;
-        updateUIForAuthState();
-    }
-}
-
-function updateUIForAuthState() {
-    if (AppState.isLoggedIn) {
-        document.querySelectorAll('.auth-required').forEach(el => {
-            el.style.display = 'block';
-        });
-        document.querySelectorAll('.guest-only').forEach(el => {
-            el.style.display = 'none';
-        });
-        
-        if (AppState.currentUser) {
-            document.querySelectorAll('.user-name').forEach(el => {
-                el.textContent = AppState.currentUser.name;
-            });
-        }
-    } else {
-        document.querySelectorAll('.auth-required').forEach(el => {
-            el.style.display = 'none';
-        });
-        document.querySelectorAll('.guest-only').forEach(el => {
-            el.style.display = 'block';
-        });
-    }
-}
-
-// ===== EVENT LISTENERS SETUP =====
 function setupEventListeners() {
     // Search functionality
     setupSearch();
     
-    // Authentication forms
-    setupAuthForms();
-    
-    // Product interactions
-    setupProductInteractions();
-    
-    // Chat system
-    setupChatSystem();
-    
-    // Filter interactions
-    setupFilters();
+    // Navigation
+    setupNavigation();
 }
 
 function setupSearch() {
-    const searchInput = document.querySelector('.search-bar input');
-    if (searchInput) {
-        searchInput.addEventListener('focus', function() {
+    const searchInputs = document.querySelectorAll('.search-bar input');
+    searchInputs.forEach(input => {
+        input.addEventListener('focus', function() {
             this.parentElement.style.transform = 'scale(1.02)';
         });
 
-        searchInput.addEventListener('blur', function() {
+        input.addEventListener('blur', function() {
             this.parentElement.style.transform = 'scale(1)';
         });
 
-        searchInput.addEventListener('input', debounce(function(e) {
-            performSearch(e.target.value);
-        }, 300));
-    }
-}
-
-function setupAuthForms() {
-    // Tab switching
-    const authTabs = document.querySelectorAll('.auth-tab');
-    authTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const tabName = this.textContent.toLowerCase().includes('login') ? 'login' : 'signup';
-            showAuthTab(tabName);
-        });
-    });
-
-    // User type selection
-    const userTypes = document.querySelectorAll('.user-type');
-    userTypes.forEach(type => {
-        type.addEventListener('click', function() {
-            selectUserType(this);
-        });
-    });
-
-    // Form submissions
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-    
-    if (signupForm) {
-        signupForm.addEventListener('submit', handleSignup);
-    }
-}
-
-function setupProductInteractions() {
-    // Product card interactions
-    document.querySelectorAll('.ad-card, .product-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (!e.target.closest('.btn')) {
-                const productId = this.dataset.productId;
-                viewProductDetails(productId);
-            }
-        });
-    });
-
-    // Like/favorite buttons
-    document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleFavorite(this.dataset.productId);
-        });
-    });
-
-    // Contact seller buttons
-    document.querySelectorAll('.contact-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            contactSeller(this.dataset.sellerId);
-        });
-    });
-}
-
-function setupChatSystem() {
-    const chatInput = document.querySelector('.chat-input input');
-    const sendBtn = document.querySelector('.send-btn');
-    
-    if (chatInput && sendBtn) {
-        chatInput.addEventListener('keypress', function(e) {
+        input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-        
-        sendBtn.addEventListener('click', sendMessage);
-    }
-}
-
-function setupFilters() {
-    const priceRange = document.querySelector('.price-range');
-    if (priceRange) {
-        priceRange.addEventListener('input', function() {
-            updatePriceDisplay(this.value);
-            filterProducts();
-        });
-    }
-
-    // Category filters
-    document.querySelectorAll('.category-filter').forEach(filter => {
-        filter.addEventListener('change', filterProducts);
-    });
-
-    // Location filters
-    document.querySelectorAll('.location-filter').forEach(filter => {
-        filter.addEventListener('change', filterProducts);
-    });
-}
-
-// ===== CORE FUNCTIONALITY =====
-function showAuthTab(tabName) {
-    // Update tabs
-    document.querySelectorAll('.auth-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    document.querySelectorAll('.auth-tab').forEach(tab => {
-        if (tab.textContent.toLowerCase().includes(tabName)) {
-            tab.classList.add('active');
-        }
-    });
-
-    // Update forms
-    document.querySelectorAll('.auth-form').forEach(form => {
-        form.classList.remove('active');
-    });
-    
-    document.getElementById(tabName + 'Form').classList.add('active');
-}
-
-function selectUserType(element) {
-    document.querySelectorAll('.user-type').forEach(type => {
-        type.classList.remove('selected');
-    });
-    element.classList.add('selected');
-    AppState.userType = element.querySelector('h4').textContent.toLowerCase();
-}
-
-async function handleLogin(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const email = formData.get('email');
-    const password = formData.get('password');
-
-    showLoading('Logging in...');
-
-    try {
-        // Firebase authentication would go here
-        const user = await mockLogin(email, password);
-        
-        AppState.currentUser = user;
-        AppState.isLoggedIn = true;
-        
-        localStorage.setItem('trustSellUser', JSON.stringify(user));
-        updateUIForAuthState();
-        
-        showNotification('Login successful!', 'success');
-        window.location.href = 'index.html';
-        
-    } catch (error) {
-        showNotification(error.message, 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-async function handleSignup(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    
-    const userData = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        password: formData.get('password'),
-        city: formData.get('city'),
-        userType: AppState.userType || 'standard'
-    };
-
-    if (!validateSignupData(userData)) {
-        return;
-    }
-
-    showLoading('Creating account...');
-
-    try {
-        // Firebase signup would go here
-        const user = await mockSignup(userData);
-        
-        AppState.currentUser = user;
-        AppState.isLoggedIn = true;
-        
-        localStorage.setItem('trustSellUser', JSON.stringify(user));
-        updateUIForAuthState();
-        
-        showNotification('Account created successfully!', 'success');
-        window.location.href = 'index.html';
-        
-    } catch (error) {
-        showNotification(error.message, 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-// ===== PRODUCT MANAGEMENT =====
-async function performSearch(query) {
-    if (query.length < 2) return;
-    
-    showLoading('Searching...');
-    
-    try {
-        const results = await searchProducts(query);
-        displaySearchResults(results);
-    } catch (error) {
-        showNotification('Search failed. Please try again.', 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
-function filterProducts() {
-    const price = document.querySelector('.price-range').value;
-    const category = document.querySelector('.category-filter:checked')?.value;
-    const location = document.querySelector('.location-filter').value;
-    
-    // Apply filters to products
-    document.querySelectorAll('.product-card, .ad-card').forEach(card => {
-        let show = true;
-        
-        if (category && card.dataset.category !== category) {
-            show = false;
-        }
-        
-        if (location && card.dataset.location !== location) {
-            show = false;
-        }
-        
-        card.style.display = show ? 'block' : 'none';
-    });
-}
-
-function viewProductDetails(productId) {
-    window.location.href = `product-detail.html?id=${productId}`;
-}
-
-function toggleFavorite(productId) {
-    const index = AppState.favorites.indexOf(productId);
-    
-    if (index > -1) {
-        AppState.favorites.splice(index, 1);
-        showNotification('Removed from favorites', 'info');
-    } else {
-        AppState.favorites.push(productId);
-        showNotification('Added to favorites', 'success');
-    }
-    
-    updateFavoritesUI();
-    saveToLocalStorage('favorites', AppState.favorites);
-}
-
-function contactSeller(sellerId) {
-    if (!AppState.isLoggedIn) {
-        showNotification('Please login to contact seller', 'warning');
-        showAuthTab('login');
-        return;
-    }
-    
-    window.location.href = `chat.html?seller=${sellerId}`;
-}
-
-// ===== CHAT FUNCTIONALITY =====
-function sendMessage() {
-    const input = document.querySelector('.chat-input input');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    if (!AppState.isLoggedIn) {
-        showNotification('Please login to send messages', 'warning');
-        return;
-    }
-    
-    const chatMessages = document.querySelector('.chat-messages');
-    const messageElement = createMessageElement(message, 'sent');
-    chatMessages.appendChild(messageElement);
-    
-    // Scroll to bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    
-    // Clear input
-    input.value = '';
-    
-    // Simulate AI response after delay
-    setTimeout(simulateAIResponse, 1000);
-}
-
-function createMessageElement(text, type) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.textContent = text;
-    return messageDiv;
-}
-
-function simulateAIResponse() {
-    const responses = [
-        "I'm interested in your product!",
-        "Can you tell me more about the condition?",
-        "Is the price negotiable?",
-        "When can I come see it?",
-        "Do you have more pictures?"
-    ];
-    
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-    const chatMessages = document.querySelector('.chat-messages');
-    const messageElement = createMessageElement(randomResponse, 'received');
-    chatMessages.appendChild(messageElement);
-    
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// ===== AI SECURITY FUNCTIONS =====
-function monitorUserBehavior() {
-    // Monitor for rapid clicks (bot behavior)
-    let clickCount = 0;
-    let lastClickTime = 0;
-    
-    document.addEventListener('click', function() {
-        const now = Date.now();
-        if (now - lastClickTime < 100) { // Multiple clicks in 100ms
-            clickCount++;
-            if (clickCount > 5) {
-                console.warn('⚠️ Suspicious activity detected: Rapid clicking');
-                // Trigger additional security measures
-            }
-        } else {
-            clickCount = 0;
-        }
-        lastClickTime = now;
-    });
-}
-
-function initializeContentModeration() {
-    // Monitor user-generated content
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-                if (node.nodeType === 1) { // Element node
-                    checkContentForModeration(node);
+                const query = this.value.trim();
+                if (query) {
+                    window.location.href = `products.html?search=${encodeURIComponent(query)}`;
                 }
-            });
+            }
         });
     });
-    
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
+}
+
+function setupNavigation() {
+    // Logo click
+    const logos = document.querySelectorAll('.logo');
+    logos.forEach(logo => {
+        logo.addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
     });
-}
-
-function checkContentForModeration(element) {
-    // Check text content for inappropriate language
-    const text = element.textContent || '';
-    const bannedWords = ['spam', 'fraud', 'scam']; // Add more words
-    
-    bannedWords.forEach(word => {
-        if (text.toLowerCase().includes(word)) {
-            console.warn(`🚨 Moderated content detected: ${word}`);
-            element.style.display = 'none';
-            showNotification('Content removed due to policy violation', 'warning');
-        }
-    });
-}
-
-function setupFraudDetection() {
-    // Monitor for suspicious patterns
-    setInterval(() => {
-        checkForSuspiciousActivity();
-    }, 30000); // Check every 30 seconds
-}
-
-function checkForSuspiciousActivity() {
-    // Implement fraud detection logic
-    console.log('🔍 Running fraud detection scan...');
 }
 
 // ===== UTILITY FUNCTIONS =====
+function showNotification(message, type = 'success') {
+    // Remove existing notification
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+function showLoading(message = 'Loading...') {
+    // Remove existing loading
+    const existingLoading = document.querySelector('.loading-overlay');
+    if (existingLoading) {
+        existingLoading.remove();
+    }
+
+    const loading = document.createElement('div');
+    loading.className = 'loading-overlay';
+    loading.innerHTML = `
+        <div class="text-center">
+            <div class="loading"></div>
+            <p class="mt-2">${message}</p>
+        </div>
+    `;
+    
+    document.body.appendChild(loading);
+}
+
+function hideLoading() {
+    const loading = document.querySelector('.loading-overlay');
+    if (loading) {
+        loading.remove();
+    }
+}
+
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -542,105 +223,43 @@ function debounce(func, wait) {
     };
 }
 
-function showLoading(message = 'Loading...') {
-    // Create or show loading overlay
-    let loading = document.getElementById('loadingOverlay');
-    if (!loading) {
-        loading = document.createElement('div');
-        loading.id = 'loadingOverlay';
-        loading.innerHTML = `
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <p>${message}</p>
-            </div>
-        `;
-        loading.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            color: white;
-        `;
-        document.body.appendChild(loading);
-    }
-    loading.style.display = 'flex';
+function formatPrice(price) {
+    return 'Rs ' + parseInt(price).toLocaleString();
 }
 
-function hideLoading() {
-    const loading = document.getElementById('loadingOverlay');
-    if (loading) {
-        loading.style.display = 'none';
-    }
+function formatDate(timestamp) {
+    if (!timestamp) return 'Recently';
+    const date = timestamp.toDate();
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days} days ago`;
+    return date.toLocaleDateString();
 }
 
-function showNotification(message, type = 'info') {
-    // Remove existing notification
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        padding: 1rem 2rem;
-        background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#004E89'};
-        color: white;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        z-index: 10000;
-        animation: slideInRight 0.3s ease;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
+function getCategoryIcon(category) {
+    const icons = {
+        'cars': 'car',
+        'mobiles': 'mobile-alt',
+        'property': 'home',
+        'jobs': 'briefcase',
+        'electronics': 'laptop',
+        'bikes': 'motorcycle',
+        'fashion': 'tshirt',
+        'furniture': 'couch'
+    };
+    return icons[category] || 'tag';
 }
 
-function validateSignupData(data) {
-    if (!data.name || data.name.length < 2) {
-        showNotification('Please enter a valid name', 'error');
-        return false;
-    }
-    
-    if (!data.email || !isValidEmail(data.email)) {
-        showNotification('Please enter a valid email', 'error');
-        return false;
-    }
-    
-    if (!data.phone || !isValidPhone(data.phone)) {
-        showNotification('Please enter a valid phone number', 'error');
-        return false;
-    }
-    
-    if (!data.password || data.password.length < 6) {
-        showNotification('Password must be at least 6 characters', 'error');
-        return false;
-    }
-    
-    return true;
-}
-
-function isValidEmail(email) {
+function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-function isValidPhone(phone) {
+function validatePhone(phone) {
     const phoneRegex = /^[0-9+-\s()]{10,}$/;
     return phoneRegex.test(phone);
 }
@@ -663,108 +282,274 @@ function loadFromLocalStorage(key) {
     }
 }
 
-// ===== MOCK FUNCTIONS (Firebase ke liye placeholder) =====
-async function mockLogin(email, password) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (email && password) {
-                resolve({
-                    id: '1',
-                    name: 'Test User',
-                    email: email,
-                    phone: '+923001234567',
-                    userType: 'verified',
-                    joinDate: new Date().toISOString()
-                });
-            } else {
-                reject(new Error('Invalid email or password'));
-            }
-        }, 1500);
-    });
-}
-
-async function mockSignup(userData) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (userData.email && userData.password) {
-                resolve({
-                    id: Date.now().toString(),
-                    ...userData,
-                    joinDate: new Date().toISOString()
-                });
-            } else {
-                reject(new Error('Signup failed. Please try again.'));
-            }
-        }, 2000);
-    });
-}
-
-async function searchProducts(query) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Mock search results
-            resolve([
-                { id: '1', title: 'iPhone 13 Pro', price: 85000, location: 'Karachi' },
-                { id: '2', title: 'Samsung Galaxy S21', price: 65000, location: 'Lahore' }
-            ]);
-        }, 1000);
-    });
-}
-
-function displaySearchResults(results) {
-    console.log('Search results:', results);
-    // Implement search results display
-}
-
-function loadInitialData() {
-    // Load saved data from localStorage
-    const savedFavorites = loadFromLocalStorage('favorites');
-    if (savedFavorites) {
-        AppState.favorites = savedFavorites;
-    }
+// ===== PRODUCT FUNCTIONS =====
+async function loadProducts(filters = {}) {
+    showLoading('Loading products...');
     
-    const savedCart = loadFromLocalStorage('cart');
-    if (savedCart) {
-        AppState.cart = savedCart;
-    }
-    
-    updateFavoritesUI();
-    updateCartUI();
-}
-
-function updateFavoritesUI() {
-    document.querySelectorAll('.like-btn').forEach(btn => {
-        const productId = btn.dataset.productId;
-        if (AppState.favorites.includes(productId)) {
-            btn.classList.add('liked');
-            btn.innerHTML = '<i class="fas fa-heart"></i>';
-        } else {
-            btn.classList.remove('liked');
-            btn.innerHTML = '<i class="far fa-heart"></i>';
+    try {
+        let query = db.collection('products').where('status', '==', 'active');
+        
+        // Apply filters
+        if (filters.category) {
+            query = query.where('category', '==', filters.category);
         }
-    });
-}
-
-function updateCartUI() {
-    const cartCount = document.querySelector('.cart-count');
-    if (cartCount) {
-        cartCount.textContent = AppState.cart.length;
+        
+        if (filters.maxPrice) {
+            query = query.where('price', '<=', parseInt(filters.maxPrice));
+        }
+        
+        if (filters.location) {
+            query = query.where('location', '==', filters.location);
+        }
+        
+        const querySnapshot = await query.orderBy('createdAt', 'desc').get();
+        const products = [];
+        
+        querySnapshot.forEach((doc) => {
+            products.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        return products;
+    } catch (error) {
+        console.error('Error loading products:', error);
+        showNotification('Error loading products', 'error');
+        return [];
+    } finally {
+        hideLoading();
     }
 }
 
-function updatePriceDisplay(value) {
-    const priceDisplay = document.querySelector('.price-display');
-    if (priceDisplay) {
-        priceDisplay.textContent = `Rs ${value}`;
+function displayProducts(products, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+        container.innerHTML = `
+            <div class="text-center" style="grid-column: 1/-1; padding: 3rem; color: #666;">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; color: #ddd;"></i>
+                <h3>No products found</h3>
+                <p>Try adjusting your search filters</p>
+            </div>
+        `;
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.onclick = () => viewProduct(product.id);
+        
+        productCard.innerHTML = `
+            <div class="product-image">
+                <i class="fas fa-${getCategoryIcon(product.category)}"></i>
+                ${product.verified ? '<div class="product-badge">Verified</div>' : ''}
+            </div>
+            <div class="product-content">
+                <h3 class="product-title">${product.title}</h3>
+                <div class="product-price">${formatPrice(product.price)}</div>
+                <div class="product-location">
+                    <i class="fas fa-map-marker-alt"></i> ${product.location}
+                </div>
+                <div class="product-meta">
+                    <div class="seller-info">
+                        <div class="seller-avatar">${getInitials(product.sellerName)}</div>
+                        <span>${product.sellerName}</span>
+                        ${product.sellerVerified ? '<i class="fas fa-badge-check verified-icon"></i>' : ''}
+                    </div>
+                    <div class="product-actions">
+                        <button class="action-btn like-btn" onclick="event.stopPropagation(); toggleFavorite('${product.id}')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation(); contactSeller('${product.sellerId}')">
+                            <i class="far fa-envelope"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(productCard);
+    });
+}
+
+function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+}
+
+function viewProduct(productId) {
+    window.location.href = `product-detail.html?id=${productId}`;
+}
+
+async function toggleFavorite(productId) {
+    if (!AppState.isLoggedIn) {
+        showNotification('Please login to add favorites', 'warning');
+        return;
+    }
+    
+    try {
+        const favoriteRef = db.collection('favorites').doc(`${AppState.currentUser.uid}_${productId}`);
+        const favoriteDoc = await favoriteRef.get();
+        
+        if (favoriteDoc.exists) {
+            await favoriteRef.delete();
+            showNotification('Removed from favorites', 'success');
+        } else {
+            await favoriteRef.set({
+                userId: AppState.currentUser.uid,
+                productId: productId,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            showNotification('Added to favorites', 'success');
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+        showNotification('Error updating favorites', 'error');
+    }
+}
+
+function contactSeller(sellerId) {
+    if (!AppState.isLoggedIn) {
+        showNotification('Please login to contact seller', 'warning');
+        window.location.href = 'auth.html';
+        return;
+    }
+    
+    window.location.href = `messages.html?seller=${sellerId}`;
+}
+
+// ===== AUTH FUNCTIONS =====
+async function loginUser(email, password) {
+    showLoading('Logging in...');
+    
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        showNotification('Login successful!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+        
+        return userCredential;
+    } catch (error) {
+        console.error('Login error:', error);
+        showNotification(getAuthErrorMessage(error), 'error');
+        throw error;
+    } finally {
+        hideLoading();
+    }
+}
+
+async function registerUser(userData) {
+    showLoading('Creating account...');
+    
+    try {
+        // Create auth user
+        const userCredential = await auth.createUserWithEmailAndPassword(userData.email, userData.password);
+        const user = userCredential.user;
+        
+        // Save user data to Firestore
+        await db.collection('users').doc(user.uid).set({
+            name: userData.name,
+            email: userData.email,
+            phone: userData.phone,
+            city: userData.city,
+            userType: userData.userType,
+            verified: userData.userType === 'verified',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showNotification('Account created successfully!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+        
+        return userCredential;
+    } catch (error) {
+        console.error('Registration error:', error);
+        showNotification(getAuthErrorMessage(error), 'error');
+        throw error;
+    } finally {
+        hideLoading();
+    }
+}
+
+async function logoutUser() {
+    try {
+        await auth.signOut();
+        showNotification('Logged out successfully', 'success');
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Logout error:', error);
+        showNotification('Error logging out', 'error');
+    }
+}
+
+function getAuthErrorMessage(error) {
+    switch (error.code) {
+        case 'auth/email-already-in-use':
+            return 'This email is already registered.';
+        case 'auth/invalid-email':
+            return 'Invalid email address.';
+        case 'auth/weak-password':
+            return 'Password should be at least 6 characters.';
+        case 'auth/user-not-found':
+            return 'No account found with this email.';
+        case 'auth/wrong-password':
+            return 'Incorrect password.';
+        case 'auth/network-request-failed':
+            return 'Network error. Please check your connection.';
+        default:
+            return error.message || 'An error occurred. Please try again.';
+    }
+}
+
+// ===== MESSAGING FUNCTIONS =====
+async function sendMessage(chatId, message) {
+    if (!AppState.isLoggedIn) {
+        showNotification('Please login to send messages', 'warning');
+        return;
+    }
+    
+    try {
+        await db.collection('messages').doc(chatId).collection('conversation').add({
+            senderId: AppState.currentUser.uid,
+            senderName: AppState.userData.name,
+            message: message,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Update last message in chat document
+        await db.collection('chats').doc(chatId).update({
+            lastMessage: message,
+            lastMessageTime: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+    } catch (error) {
+        console.error('Error sending message:', error);
+        showNotification('Error sending message', 'error');
     }
 }
 
 // ===== EXPORT FOR GLOBAL ACCESS =====
 window.TrustSell = {
     AppState,
+    auth,
+    db,
+    storage,
     showNotification,
     showLoading,
     hideLoading,
+    loadProducts,
+    displayProducts,
+    loginUser,
+    registerUser,
+    logoutUser,
     toggleFavorite,
     contactSeller
 };
