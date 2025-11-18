@@ -64,6 +64,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: bounce 2s infinite;
+            cursor: pointer;
         }
 
         @keyframes bounce {
@@ -262,6 +263,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             animation: fadeIn 0.6s ease;
+            cursor: pointer;
         }
 
         @keyframes fadeIn {
@@ -332,6 +334,25 @@
         .floating:nth-child(1) { top: 20%; left: 10%; width: 50px; height: 50px; animation-delay: 0s; }
         .floating:nth-child(2) { top: 60%; left: 80%; width: 80px; height: 80px; animation-delay: 1s; }
         .floating:nth-child(3) { top: 40%; left: 70%; width: 30px; height: 30px; animation-delay: 2s; }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 2rem;
+            background: var(--success);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
@@ -345,14 +366,14 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <div class="logo" onclick="window.location.href='index.html'">
                 <i class="fas fa-shield-alt"></i> Trust Sell
             </div>
             <div class="search-bar">
-                <input type="text" placeholder="🔍 Search for cars, mobiles, houses, jobs...">
+                <input type="text" id="searchInput" placeholder="🔍 Search for cars, mobiles, houses, jobs...">
             </div>
             <div class="nav-links">
-                <a href="auth.html">Login</a>
+                <a href="auth.html" id="authLink">Login</a>
                 <a href="products.html">Browse</a>
                 <a href="post-ad.html" class="btn btn-primary">Sell Now</a>
             </div>
@@ -375,28 +396,28 @@
     <section class="categories">
         <h2 class="section-title">Popular Categories</h2>
         <div class="categories-grid">
-            <div class="category-card">
+            <div class="category-card" onclick="filterByCategory('cars')">
                 <div class="category-icon">
                     <i class="fas fa-car"></i>
                 </div>
                 <h3>Cars</h3>
                 <p>10,000+ vehicles</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" onclick="filterByCategory('mobiles')">
                 <div class="category-icon">
                     <i class="fas fa-mobile-alt"></i>
                 </div>
                 <h3>Mobiles</h3>
                 <p>25,000+ phones</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" onclick="filterByCategory('property')">
                 <div class="category-icon">
                     <i class="fas fa-home"></i>
                 </div>
                 <h3>Property</h3>
                 <p>8,000+ properties</p>
             </div>
-            <div class="category-card">
+            <div class="category-card" onclick="filterByCategory('jobs')">
                 <div class="category-icon">
                     <i class="fas fa-briefcase"></i>
                 </div>
@@ -409,62 +430,162 @@
     <!-- Featured Ads -->
     <section class="featured-ads">
         <h2 class="section-title">Featured Products</h2>
-        <div class="ads-grid">
-            <div class="ad-card">
-                <div class="ad-image">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <div class="ad-content">
-                    <div class="verified-badge">Verified Seller</div>
-                    <h3>iPhone 14 Pro Max</h3>
-                    <div class="ad-price">Rs 125,000</div>
-                    <p>Karachi • Today</p>
-                </div>
-            </div>
-            <div class="ad-card">
-                <div class="ad-image">
-                    <i class="fas fa-car"></i>
-                </div>
-                <div class="ad-content">
-                    <div class="verified-badge">Verified Seller</div>
-                    <h3>Honda Civic 2020</h3>
-                    <div class="ad-price">Rs 2,800,000</div>
-                    <p>Lahore • 2 days ago</p>
-                </div>
-            </div>
-            <div class="ad-card">
-                <div class="ad-image">
-                    <i class="fas fa-laptop"></i>
-                </div>
-                <div class="ad-content">
-                    <div class="verified-badge">Verified Seller</div>
-                    <h3>Dell Gaming Laptop</h3>
-                    <div class="ad-price">Rs 85,000</div>
-                    <p>Islamabad • Yesterday</p>
-                </div>
-            </div>
+        <div class="ads-grid" id="featuredAds">
+            <!-- Ads will be loaded dynamically -->
         </div>
     </section>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
     <script>
-        // Animated counter for stats
-        function animateCounter(element, target, duration) {
-            let start = 0;
-            const increment = target / (duration / 16);
-            const timer = setInterval(() => {
-                start += increment;
-                if (start >= target) {
-                    element.textContent = target + '+';
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(start) + '+';
-                }
-            }, 16);
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJ9mLHHQxnJKtixZrOYy_Vtf-TuwED2dE",
+            authDomain: "trustsell-78c18.firebaseapp.com",
+            databaseURL: "https://trustsell-78c18-default-rtdb.firebaseio.com",
+            projectId: "trustsell-78c18",
+            storageBucket: "trustsell-78c18.firebasestorage.app",
+            messagingSenderId: "909095926042",
+            appId: "1:909095926042:web:3c6eee4f055d21fda794a3",
+            measurementId: "G-4V0DBSRYKW"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Global State
+        let currentUser = null;
+
+        // Check Authentication State
+        auth.onAuthStateChanged((user) => {
+            currentUser = user;
+            updateAuthUI();
+        });
+
+        function updateAuthUI() {
+            const authLink = document.getElementById('authLink');
+            if (currentUser) {
+                authLink.textContent = 'My Profile';
+                authLink.href = 'profile.html';
+            } else {
+                authLink.textContent = 'Login';
+                authLink.href = 'auth.html';
+            }
         }
 
-        // Initialize animations when page loads
+        // Load Featured Ads
+        function loadFeaturedAds() {
+            const featuredAdsContainer = document.getElementById('featuredAds');
+            
+            db.collection('products').limit(6).get()
+                .then((querySnapshot) => {
+                    featuredAdsContainer.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        featuredAdsContainer.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; color: white; padding: 2rem;">
+                                <h3>No featured products available</h3>
+                                <p>Be the first to post an ad!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        const product = doc.data();
+                        const adCard = document.createElement('div');
+                        adCard.className = 'ad-card';
+                        adCard.onclick = () => viewProduct(doc.id);
+                        
+                        adCard.innerHTML = `
+                            <div class="ad-image">
+                                <i class="fas fa-${getCategoryIcon(product.category)}"></i>
+                            </div>
+                            <div class="ad-content">
+                                ${product.verified ? '<div class="verified-badge">Verified Seller</div>' : ''}
+                                <h3>${product.title}</h3>
+                                <div class="ad-price">Rs ${product.price}</div>
+                                <p>${product.location} • ${formatDate(product.createdAt)}</p>
+                            </div>
+                        `;
+                        
+                        featuredAdsContainer.appendChild(adCard);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error loading ads:', error);
+                    showNotification('Error loading featured ads', 'error');
+                });
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'cars': 'car',
+                'mobiles': 'mobile-alt',
+                'property': 'home',
+                'jobs': 'briefcase',
+                'electronics': 'laptop',
+                'bikes': 'motorcycle'
+            };
+            return icons[category] || 'tag';
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Recently';
+            const date = timestamp.toDate();
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 7) return `${days} days ago`;
+            return date.toLocaleDateString();
+        }
+
+        function viewProduct(productId) {
+            window.location.href = `product-detail.html?id=${productId}`;
+        }
+
+        function filterByCategory(category) {
+            window.location.href = `products.html?category=${category}`;
+        }
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = type === 'error' ? 'var(--danger)' : 'var(--success)';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Animate category cards on scroll
+            loadFeaturedAds();
+            
+            // Animate elements on scroll
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -476,15 +597,6 @@
             document.querySelectorAll('.category-card, .ad-card').forEach(card => {
                 observer.observe(card);
             });
-        });
-
-        // Search functionality
-        document.querySelector('.search-bar input').addEventListener('focus', function() {
-            this.parentElement.style.transform = 'scale(1.02)';
-        });
-
-        document.querySelector('.search-bar input').addEventListener('blur', function() {
-            this.parentElement.style.transform = 'scale(1)';
         });
     </script>
 </body>
