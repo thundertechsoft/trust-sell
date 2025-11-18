@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup - Trust Sell</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #00A896;
+            --gradient: linear-gradient(135deg, #FF6B35, #004E89);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            min-height: 80vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .auth-left {
+            flex: 1;
+            background: var(--gradient);
+            color: white;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
+        }
+
+        .auth-right {
+            flex: 1;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: #f8f9fa;
+            border-radius: 50px;
+            padding: 5px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .auth-tab.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .auth-form {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+            transform: scale(1.02);
+        }
+
+        .user-type-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-type {
+            flex: 1;
+            text-align: center;
+            padding: 2rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .user-type:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .user-type.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 78, 137, 0.1));
+            transform: translateY(-5px);
+        }
+
+        .user-type i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .feature-list i {
+            margin-right: 1rem;
+            background: white;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-left">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Join Trust Sell</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Pakistan's Most Secure Marketplace</p>
+            
+            <ul class="feature-list">
+                <li><i class="fas fa-shield-alt"></i> AI-Powered Security</li>
+                <li><i class="fas fa-badge-check"></i> Verified Users Only</li>
+                <li><i class="fas fa-rocket"></i> Instant Transactions</li>
+                <li><i class="fas fa-headset"></i> 24/7 Customer Support</li>
+            </ul>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                <h3 style="margin-bottom: 1rem;">Why Get Verified?</h3>
+                <p>Verified users get 10x more responses and build trust with buyers instantly!</p>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showTab('login')">Login</div>
+                <div class="auth-tab" onclick="showTab('signup')">Sign Up</div>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <h2 style="margin-bottom: 2rem; text-align: center;">Welcome Back!</h2>
+                
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="btn">Login to Your Account</button>
+
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="#" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="auth-form" id="signupForm">
+                <h2 style="margin-bottom: 1rem; text-align: center;">Create Account</h2>
+                <p style="text-align: center; margin-bottom: 2rem; color: #666;">Join thousands of trusted users</p>
+
+                <div class="user-type-selector">
+                    <div class="user-type" onclick="selectUserType(this)">
+                        <i class="fas fa-user-check"></i>
+                        <h4>Verified User</h4>
+                        <p>Full access with verification</p>
+                    </div>
+                    <div class="user-type" onclick="selectUserType(this)">
+                        <i class="fas fa-user"></i>
+                        <h4>Standard User</h4>
+                        <p>Basic access</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" placeholder="Full Name" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="tel" placeholder="Phone Number" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" placeholder="Create Password" required>
+                </div>
+
+                <div class="form-group">
+                    <select required>
+                        <option value="">Select City</option>
+                        <option>Karachi</option>
+                        <option>Lahore</option>
+                        <option>Islamabad</option>
+                        <option>Rawalpindi</option>
+                        <option>Faisalabad</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Form').classList.add('active');
+        }
+
+        function selectUserType(element) {
+            document.querySelectorAll('.user-type').forEach(type => {
+                type.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add Firebase login logic here
+            alert('Login functionality will be added with Firebase');
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add Firebase signup logic here
+            alert('Signup functionality will be added with Firebase');
+        });
+
+        // Input animations
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
