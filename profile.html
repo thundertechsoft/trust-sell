@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Trust Sell</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #00A896;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gradient: linear-gradient(135deg, #FF6B35, #004E89);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .profile-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .user-card {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .user-verified {
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: var(--gradient);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .menu-item i {
+            width: 20px;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideInRight 0.6s ease;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .content-header h2 {
+            color: var(--dark);
+            font-size: 2rem;
+        }
+
+        .ads-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--light);
+            padding: 0.5rem;
+            border-radius: 15px;
+        }
+
+        .ads-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .ads-tab.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ad-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ad-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 150px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .ad-status {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-sold {
+            background: var(--danger);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: black;
+        }
+
+        .ad-content {
+            padding: 1rem;
+        }
+
+        .ad-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .ad-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .ad-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-edit {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-edit:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--light);
+            color: var(--danger);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i> Trust Sell
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="products.html">Browse</a>
+                <a href="post-ad.html" class="btn btn-primary">Sell Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-card">
+                <div class="user-avatar">AS</div>
+                <h2 class="user-name">Ali Shah</h2>
+                <div class="user-verified">
+                    <i class="fas fa-badge-check"></i> Verified Seller
+                </div>
+                <p>Member since January 2023</p>
+            </div>
+
+            <div class="user-stats">
+                <div class="stat">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Active Ads</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">4.9</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-item active" onclick="showSection('ads')">
+                    <i class="fas fa-th-large"></i>
+                    <span>My Ads</span>
+                </li>
+                <li class="menu-item" onclick="showSection('favorites')">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorites</span>
+                </li>
+                <li class="menu-item" onclick="showSection('messages')">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </li>
+                <li class="menu-item" onclick="showSection('reviews')">
+                    <i class="fas fa-star"></i>
+                    <span>Reviews</span>
+                </li>
+                <li class="menu-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- My Ads Section -->
+            <div class="content-section active" id="ads-section">
+                <div class="content-header">
+                    <h2>My Active Ads</h2>
+                    <a href="post-ad.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Post New Ad
+                    </a>
+                </div>
+
+                <div class="ads-tabs">
+                    <div class="ads-tab active" onclick="showAdsTab('active')">Active (24)</div>
+                    <div class="ads-tab" onclick="showAdsTab('sold')">Sold (12)</div>
+                    <div class="ads-tab" onclick="showAdsTab('pending')">Pending (3)</div>
+                </div>
+
+                <div class="ads-grid">
+                    <!-- Active Ad 1 -->
+                    <div class="ad-item">
+                        <div class="ad-image">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div class="ad-status status-active">Active</div>
+                        </div>
+                        <div class="ad-content">
+                            <h3 class="ad-title">iPhone 14 Pro Max</h3>
+                            <div class="ad-price">Rs 125,000</div>
+                            <div class="ad-meta">
+                                <span>Views: 248</span>
+                                <span>2 days ago</span>
+                            </div>
+                            <div class="ad-actions">
+                                <button class="action-btn btn-edit">Edit</button>
+                                <button class="action-btn btn-delete">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Ad 2 -->
+                    <div class="ad-item">
+                        <div class="ad-image">
+                            <i class="fas fa-laptop"></i>
+                            <div class="ad-status status-active">Active</div>
+                        </div>
+                        <div class="ad-content">
+                            <h3 class="ad-title">Dell Gaming Laptop</h3>
+                            <div class="ad-price">Rs 85,000</div>
+                            <div class="ad-meta">
+                                <span>Views: 156</span>
+                                <span>1 week ago</span>
+                            </div>
+                            <div class="ad-actions">
+                                <button class="action-btn btn-edit">Edit</button>
+                                <button class="action-btn btn-delete">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add more ad items as needed -->
+                </div>
+            </div>
+
+            <!-- Other sections would be implemented similarly -->
+            <div class="content-section" id="favorites-section">
+                <div class="empty-state">
+                    <i class="fas fa-heart"></i>
+                    <h3>No favorites yet</h3>
+                    <p>Items you like will appear here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            // Update menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.menu-item').classList.add('active');
+
+            // Update content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(section + '-section').classList.add('active');
+        }
+
+        function showAdsTab(tab) {
+            document.querySelectorAll('.ads-tab').forEach(tabEl => {
+                tabEl.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Here you would filter the ads based on the selected tab
+            // This is just a simulation
+            const ads = document.querySelectorAll('.ad-item');
+            ads.forEach(ad => {
+                ad.style.display = 'block';
+            });
+        }
+
+        // Initialize with some sample data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to ad items
+            document.querySelectorAll('.ad-item').forEach(ad => {
+                ad.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                ad.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
