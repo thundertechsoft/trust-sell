@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Trust Sell</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #00A896;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gradient: linear-gradient(135deg, #FF6B35, #004E89);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .products-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .filters-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .filter-group {
+            margin-bottom: 2rem;
+        }
+
+        .filter-group h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .price-range {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .price-inputs input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-list li:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .category-list li i {
+            margin-right: 0.5rem;
+            width: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease;
+            cursor: pointer;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .product-content {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-location {
+            color: #666;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-location i {
+            margin-right: 0.5rem;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .seller-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gradient);
+            margin-right: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .verified-icon {
+            color: var(--success);
+            margin-left: 0.5rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 50%;
+            background: var(--light);
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .search-sort {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .sort-options select {
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            font-size: 1rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .page-btn {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn.active {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .page-btn:hover:not(.active) {
+            background: var(--light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i> Trust Sell
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="🔍 Search products...">
+            </div>
+            <div class="nav-links">
+                <a href="auth.html">Login</a>
+                <a href="index.html">Home</a>
+                <a href="post-ad.html" class="btn btn-primary">Sell Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="products-container">
+        <!-- Filters Sidebar -->
+        <div class="filters-sidebar">
+            <h2 style="margin-bottom: 2rem; color: var(--primary);">Filters</h2>
+            
+            <div class="filter-group">
+                <h3>Price Range</h3>
+                <input type="range" class="price-range" min="0" max="1000000" value="500000">
+                <div class="price-inputs">
+                    <input type="number" placeholder="Min" value="0">
+                    <input type="number" placeholder="Max" value="1000000">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Categories</h3>
+                <ul class="category-list">
+                    <li><i class="fas fa-car"></i> Cars & Vehicles</li>
+                    <li><i class="fas fa-mobile-alt"></i> Mobiles & Tablets</li>
+                    <li><i class="fas fa-home"></i> Property</li>
+                    <li><i class="fas fa-briefcase"></i> Jobs</li>
+                    <li><i class="fas fa-bicycle"></i> Bikes</li>
+                    <li><i class="fas fa-laptop"></i> Electronics</li>
+                    <li><i class="fas fa-tshirt"></i> Fashion</li>
+                    <li><i class="fas fa-couch"></i> Furniture</li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h3>Location</h3>
+                <select style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 10px;">
+                    <option>All Pakistan</option>
+                    <option>Karachi</option>
+                    <option>Lahore</option>
+                    <option>Islamabad</option>
+                    <option>Rawalpindi</option>
+                    <option>Faisalabad</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <h3>Seller Type</h3>
+                <label style="display: block; margin: 0.5rem 0;">
+                    <input type="checkbox" checked> Verified Only
+                </label>
+                <label style="display: block; margin: 0.5rem 0;">
+                    <input type="checkbox"> Individual
+                </label>
+                <label style="display: block; margin: 0.5rem 0;">
+                    <input type="checkbox"> Business
+                </label>
+            </div>
+
+            <button style="width: 100%; padding: 1rem; background: var(--gradient); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                Apply Filters
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-main">
+            <div class="search-sort">
+                <div style="font-size: 1.2rem; color: var(--dark);">
+                    <strong>1,248</strong> Products Found
+                </div>
+                <div class="sort-options">
+                    <select>
+                        <option>Sort by: Newest First</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Most Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="products-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card" onclick="window.location.href='product-detail.html'">
+                    <div class="product-image">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div class="product-badge">Verified</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">iPhone 14 Pro Max 256GB</h3>
+                        <div class="product-price">Rs 125,000</div>
+                        <div class="product-location">
+                            <i class="fas fa-map-marker-alt"></i> Karachi, Sindh
+                        </div>
+                        <div class="product-meta">
+                            <div class="seller-info">
+                                <div class="seller-avatar">AS</div>
+                                <span>Ali Shah</span>
+                                <i class="fas fa-badge-check verified-icon"></i>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn"><i class="far fa-heart"></i></button>
+                                <button class="action-btn"><i class="far fa-envelope"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-car"></i>
+                        <div class="product-badge">Verified</div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Honda Civic 2020 Oriel</h3>
+                        <div class="product-price">Rs 2,800,000</div>
+                        <div class="product-location">
+                            <i class="fas fa-map-marker-alt"></i> Lahore, Punjab
+                        </div>
+                        <div class="product-meta">
+                            <div class="seller-info">
+                                <div class="seller-avatar">SR</div>
+                                <span>Saad Raza</span>
+                                <i class="fas fa-badge-check verified-icon"></i>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn"><i class="far fa-heart"></i></button>
+                                <button class="action-btn"><i class="far fa-envelope"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Dell Gaming Laptop i7</h3>
+                        <div class="product-price">Rs 85,000</div>
+                        <div class="product-location">
+                            <i class="fas fa-map-marker-alt"></i> Islamabad
+                        </div>
+                        <div class="product-meta">
+                            <div class="seller-info">
+                                <div class="seller-avatar">FA</div>
+                                <span>Fatima Ali</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn"><i class="far fa-heart"></i></button>
+                                <button class="action-btn"><i class="far fa-envelope"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more product cards as needed -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product card animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const productCards = document.querySelectorAll('.product-card');
+            
+            productCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Price range slider
+            const priceSlider = document.querySelector('.price-range');
+            const minPrice = document.querySelector('.price-inputs input:first-child');
+            const maxPrice = document.querySelector('.price-inputs input:last-child');
+
+            priceSlider.addEventListener('input', function() {
+                maxPrice.value = this.value;
+            });
+
+            // Like button functionality
+            document.querySelectorAll('.action-btn .fa-heart').forEach(heart => {
+                heart.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('far');
+                    this.classList.toggle('fas');
+                    this.classList.toggle('text-danger');
+                });
+            });
+        });
+
+        // Filter products
+        function filterProducts() {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                card.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
