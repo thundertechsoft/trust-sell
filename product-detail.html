@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Trust Sell</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #00A896;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gradient: linear-gradient(135deg, #FF6B35, #004E89);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .product-detail-container {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .product-gallery {
+            padding: 2rem;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            background: var(--gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 80px;
+            background: var(--light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail:hover, .thumbnail.active {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 2rem;
+        }
+
+        .product-badge {
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .product-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .product-description {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .product-specs {
+            margin-bottom: 2rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .spec-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .seller-info-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .seller-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .seller-details h4 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .verified-badge {
+            color: var(--success);
+        }
+
+        .seller-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .stat {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .similar-products {
+            margin-top: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i> Trust Sell
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="products.html">Browse</a>
+                <a href="auth.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="product-detail-container">
+        <div class="product-detail">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <div class="main-image">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="image-thumbnails">
+                    <div class="thumbnail active"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="thumbnail"><i class="fas fa-camera"></i></div>
+                    <div class="thumbnail"><i class="fas fa-image"></i></div>
+                    <div class="thumbnail"><i class="fas fa-photo-video"></i></div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <div class="product-badge">Verified Product</div>
+                <h1 class="product-title">iPhone 14 Pro Max 256GB</h1>
+                <div class="product-price">Rs 125,000</div>
+                
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Karachi, Sindh</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-clock"></i>
+                        <span>Posted 2 hours ago</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-eye"></i>
+                        <span>248 views</span>
+                    </div>
+                </div>
+
+                <div class="product-description">
+                    <p>Brand new iPhone 14 Pro Max 256GB Deep Purple. Original box with all accessories. Never used, with 1 year official warranty. Cash on delivery available in Karachi.</p>
+                    <p>📱 6.7-inch Super Retina XDR display<br>
+                       🎯 A16 Bionic chip<br>
+                       📸 48MP Main camera<br>
+                       🔋 All-day battery life</p>
+                </div>
+
+                <div class="product-specs">
+                    <h3 style="margin-bottom: 1rem;">Specifications</h3>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <span>Condition:</span>
+                            <span class="spec-value">Like New</span>
+                        </div>
+                        <div class="spec-item">
+                            <span>Brand:</span>
+                            <span class="spec-value">Apple</span>
+                        </div>
+                        <div class="spec-item">
+                            <span>Storage:</span>
+                            <span class="spec-value">256GB</span>
+                        </div>
+                        <div class="spec-item">
+                            <span>Color:</span>
+                            <span class="spec-value">Deep Purple</span>
+                        </div>
+                        <div class="spec-item">
+                            <span>Warranty:</span>
+                            <span class="spec-value">1 Year</span>
+                        </div>
+                        <div class="spec-item">
+                            <span>Authenticity:</span>
+                            <span class="spec-value">Original</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seller Information -->
+                <div class="seller-info-card">
+                    <div class="seller-header">
+                        <div class="seller-avatar">AS</div>
+                        <div class="seller-details">
+                            <h4>Ali Shah <i class="fas fa-badge-check verified-badge"></i></h4>
+                            <p>Member since 2022</p>
+                        </div>
+                    </div>
+                    <div class="seller-stats">
+                        <div class="stat">
+                            <div class="stat-number">4.9</div>
+                            <div>Rating</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">127</div>
+                            <div>Products</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">98%</div>
+                            <div>Response Rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-phone"></i> Call Now
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='chat.html'">
+                        <i class="far fa-envelope"></i> Send Message
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Similar Products -->
+        <div class="similar-products">
+            <h2 class="section-title">Similar Products</h2>
+            <div class="products-grid">
+                <!-- Similar product cards would go here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image gallery functionality
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const mainImage = document.querySelector('.main-image i');
+                const newIcon = this.querySelector('i').className;
+                mainImage.className = newIcon;
+            });
+        });
+
+        // Contact seller functionality
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            alert('Calling seller at +92 300 1234567');
+        });
+
+        // View counter simulation
+        let views = 248;
+        setInterval(() => {
+            views++;
+            document.querySelector('.meta-item:nth-child(3) span:last-child').textContent = views + ' views';
+        }, 10000);
+    </script>
+</body>
+</html>
