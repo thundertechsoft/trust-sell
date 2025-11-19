@@ -4,20 +4,553 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post New Ad - Trust Sell</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Base Styles - Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #00A896;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gradient: linear-gradient(135deg, #FF6B35, #004E89);
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            line-height: 1.6;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-icon {
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        /* Post Ad Container */
+        .post-ad-container {
+            margin-top: 70px;
+            padding: 1rem;
+        }
+
+        .post-ad-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Form Header */
+        .form-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Form Steps */
+        .form-steps {
+            display: flex;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ddd;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 auto 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .step-label {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Form Sections */
+        .form-section {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        /* Category Selection */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        .category-option {
+            border: 2px solid #e9ecef;
+            border-radius: var(--radius);
+            padding: 1rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 78, 137, 0.1));
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        /* Location Selection */
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Price Input */
+        .price-input {
+            position: relative;
+        }
+
+        .price-prefix {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-weight: 600;
+        }
+
+        .price-input .form-control {
+            padding-left: 3rem;
+        }
+
+        /* Image Upload */
+        .image-upload {
+            border: 2px dashed #ddd;
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .image-upload:active {
+            border-color: var(--primary);
+            background: #f8f9fa;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            height: 100px;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .feature-option {
+            border: 2px solid #e9ecef;
+            border-radius: var(--radius);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feature-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 78, 137, 0.1));
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .feature-price {
+            color: var(--success);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .preview-location {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .preview-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .preview-feature {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 0.8rem;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .nav-sell {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -10px;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Tablet Styles */
+        @media (min-width: 768px) {
+            .post-ad-container {
+                max-width: 600px;
+                margin: 70px auto 0;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .image-preview {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Desktop Styles */
+        @media (min-width: 1024px) {
+            .bottom-nav {
+                display: none;
+            }
+            
+            body {
+                padding-bottom: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <i class="fas fa-shield-alt"></i> Trust Sell
+                <i class="fas fa-shield-alt"></i> TrustSell
             </div>
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="products.html">Browse</a>
-                <a href="auth.html" class="auth-link">Login</a>
+            <div class="nav-actions">
+                <a href="index.html" class="nav-icon">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="profile.html" class="nav-icon">
+                    <i class="far fa-user"></i>
+                </a>
             </div>
         </div>
     </nav>
@@ -25,7 +558,8 @@
     <!-- Post Ad Container -->
     <div class="post-ad-container">
         <div class="post-ad-card">
-            <div class="form-header text-center mb-3">
+            <!-- Form Header -->
+            <div class="form-header">
                 <h1>Sell Your Item</h1>
                 <p>Reach thousands of buyers on Trust Sell</p>
             </div>
@@ -34,7 +568,7 @@
             <div class="form-steps">
                 <div class="step active" data-step="1">
                     <div class="step-number">1</div>
-                    <div class="step-label">Basic Info</div>
+                    <div class="step-label">Category</div>
                 </div>
                 <div class="step" data-step="2">
                     <div class="step-number">2</div>
@@ -42,41 +576,25 @@
                 </div>
                 <div class="step" data-step="3">
                     <div class="step-number">3</div>
-                    <div class="step-label">Photos</div>
+                    <div class="step-label">Location</div>
                 </div>
                 <div class="step" data-step="4">
                     <div class="step-number">4</div>
+                    <div class="step-label">Photos</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-number">5</div>
                     <div class="step-label">Review</div>
                 </div>
             </div>
 
-            <!-- Step 1: Basic Information -->
+            <!-- Step 1: Category Selection -->
             <div class="form-section active" id="step1">
                 <div class="form-group">
-                    <label for="category">Category *</label>
-                    <select id="category" required>
-                        <option value="">Select Category</option>
-                        <option value="cars">Cars & Vehicles</option>
-                        <option value="mobiles">Mobiles & Tablets</option>
-                        <option value="property">Property</option>
-                        <option value="jobs">Jobs</option>
-                        <option value="bikes">Bikes</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="furniture">Furniture</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="title">Ad Title *</label>
-                    <input type="text" id="title" placeholder="e.g., iPhone 14 Pro Max 256GB Brand New" required maxlength="100">
-                    <small style="color: #666; margin-top: 0.5rem; display: block;">Maximum 100 characters</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="description">Description *</label>
-                    <textarea id="description" placeholder="Describe your item in detail..." required minlength="50" maxlength="1000"></textarea>
-                    <small style="color: #666; margin-top: 0.5rem; display: block;">Minimum 50 characters, Maximum 1000 characters</small>
+                    <label>Select Category *</label>
+                    <div class="categories-grid" id="categoriesGrid">
+                        <!-- Categories will be loaded dynamically -->
+                    </div>
                 </div>
 
                 <div class="form-actions">
@@ -87,57 +605,38 @@
                 </div>
             </div>
 
-            <!-- Step 2: Details -->
+            <!-- Step 2: Basic Details -->
             <div class="form-section" id="step2">
                 <div class="form-group">
-                    <label for="price">Price *</label>
-                    <div class="price-input" style="position: relative;">
-                        <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #666; font-weight: 600;">Rs</span>
-                        <input type="number" id="price" placeholder="0" required min="1" style="padding-left: 3rem;">
+                    <label for="adTitle">Ad Title *</label>
+                    <input type="text" id="adTitle" class="form-control" placeholder="e.g., iPhone 14 Pro Max 256GB Brand New" maxlength="100">
+                    <small style="color: #666; margin-top: 0.5rem; display: block;">Maximum 100 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="adDescription">Description *</label>
+                    <textarea id="adDescription" class="form-control" placeholder="Describe your item in detail... Include features, condition, reason for selling, etc." minlength="50" maxlength="1000"></textarea>
+                    <small style="color: #666; margin-top: 0.5rem; display: block;">Minimum 50 characters, Maximum 1000 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="adPrice">Price *</label>
+                    <div class="price-input">
+                        <span class="price-prefix">Rs</span>
+                        <input type="number" id="adPrice" class="form-control" placeholder="0" min="1">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="condition">Condition *</label>
-                    <select id="condition" required>
+                    <label for="adCondition">Condition *</label>
+                    <select id="adCondition" class="form-control">
                         <option value="">Select Condition</option>
                         <option value="new">Brand New</option>
                         <option value="like-new">Like New</option>
-                        <option value="used">Used</option>
+                        <option value="used">Used - Good</option>
+                        <option value="fair">Used - Fair</option>
                         <option value="refurbished">Refurbished</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="location">Location *</label>
-                    <select id="location" required>
-                        <option value="">Select City</option>
-                        <option value="Karachi">Karachi</option>
-                        <option value="Lahore">Lahore</option>
-                        <option value="Islamabad">Islamabad</option>
-                        <option value="Rawalpindi">Rawalpindi</option>
-                        <option value="Faisalabad">Faisalabad</option>
-                        <option value="Multan">Multan</option>
-                        <option value="Peshawar">Peshawar</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Ad Features</label>
-                    <div class="feature-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <div class="feature-option" onclick="toggleFeature(this, 'featured')">
-                            <i class="fas fa-star"></i>
-                            <h4>Featured Ad</h4>
-                            <p>Get 3x more views</p>
-                            <small>Rs 500</small>
-                        </div>
-                        <div class="feature-option" onclick="toggleFeature(this, 'urgent')">
-                            <i class="fas fa-bolt"></i>
-                            <h4>Urgent Ad</h4>
-                            <p>Sell faster</p>
-                            <small>Rs 300</small>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="form-actions">
@@ -150,20 +649,38 @@
                 </div>
             </div>
 
-            <!-- Step 3: Photos -->
+            <!-- Step 3: Location -->
             <div class="form-section" id="step3">
                 <div class="form-group">
-                    <label>Upload Photos *</label>
-                    <div class="image-upload" onclick="document.getElementById('imageInput').click()">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <h3>Click to Upload Images</h3>
-                        <p>Add up to 12 photos. First image will be the cover.</p>
-                    </div>
-                    <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
-                    
-                    <div class="image-preview" id="imagePreview">
-                        <!-- Images will be previewed here -->
-                    </div>
+                    <label for="adProvince">Province *</label>
+                    <select id="adProvince" class="form-control" required>
+                        <option value="">Select Province</option>
+                        <option value="sindh">Sindh</option>
+                        <option value="punjab">Punjab</option>
+                        <option value="kpk">Khyber Pakhtunkhwa</option>
+                        <option value="balochistan">Balochistan</option>
+                        <option value="islamabad">Islamabad Capital Territory</option>
+                        <option value="gilgit">Gilgit-Baltistan</option>
+                        <option value="ajk">Azad Jammu & Kashmir</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="adCity">City *</label>
+                    <select id="adCity" class="form-control" required>
+                        <option value="">Select City</option>
+                        <!-- Cities will be loaded based on province -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="adArea">Area (Optional)</label>
+                    <input type="text" id="adArea" class="form-control" placeholder="e.g., DHA, Gulshan, Bahria Town">
+                </div>
+
+                <div class="form-group">
+                    <label for="adAddress">Full Address (Optional)</label>
+                    <textarea id="adAddress" class="form-control" placeholder="House #, Street, Sector, etc." rows="3"></textarea>
                 </div>
 
                 <div class="form-actions">
@@ -176,31 +693,52 @@
                 </div>
             </div>
 
-            <!-- Step 4: Review -->
+            <!-- Step 4: Photos -->
             <div class="form-section" id="step4">
                 <div class="form-group">
-                    <h3 class="text-center mb-2">Review Your Ad</h3>
-                    
-                    <div style="background: var(--light); padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
-                        <h4 id="reviewTitle" style="margin-bottom: 1rem;">Ad Title</h4>
-                        <p id="reviewDescription" style="margin-bottom: 1rem; color: #666;">Description will appear here</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span id="reviewPrice" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">Rs 0</span>
-                            <span id="reviewLocation" style="color: #666;">Location</span>
+                    <label>Upload Photos *</label>
+                    <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <div id="reviewFeatures" style="margin-top: 1rem;"></div>
+                        <h3>Click to Upload Images</h3>
+                        <p>Add up to 12 photos. First image will be the cover.</p>
+                        <small style="color: #666;">Recommended: 1200x800 pixels or larger</small>
                     </div>
-
-                    <div class="form-group">
-                        <label for="contactNumber">Contact Number *</label>
-                        <input type="tel" id="contactNumber" placeholder="+92 300 1234567" required>
+                    <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                    
+                    <div class="image-preview" id="imagePreview">
+                        <!-- Image previews will be shown here -->
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 0.5rem;">
-                            <input type="checkbox" id="agreeTerms" required>
-                            I agree to the <a href="#" style="color: var(--primary);">Terms & Conditions</a>
-                        </label>
+                <div class="form-group">
+                    <label>Ad Features</label>
+                    <div class="features-grid">
+                        <div class="feature-option" onclick="toggleFeature(this, 'featured')">
+                            <div class="feature-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4>Featured Ad</h4>
+                                    <p>Get 3x more views and appear at the top of search results</p>
+                                </div>
+                                <div class="feature-price">Rs 500</div>
+                            </div>
+                        </div>
+                        <div class="feature-option" onclick="toggleFeature(this, 'urgent')">
+                            <div class="feature-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4>Urgent Ad</h4>
+                                    <p>Highlight your ad for faster selling</p>
+                                </div>
+                                <div class="feature-price">Rs 300</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -208,23 +746,113 @@
                     <button class="btn btn-outline" onclick="prevStep(3)">
                         <i class="fas fa-arrow-left"></i> Back
                     </button>
+                    <button class="btn btn-primary" onclick="validateStep4()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Review & Submit -->
+            <div class="form-section" id="step5">
+                <div class="preview-section">
+                    <h3 class="preview-title" id="previewTitle">Ad Title</h3>
+                    <div class="preview-price" id="previewPrice">Rs 0</div>
+                    <div class="preview-location" id="previewLocation">Location</div>
+                    <p id="previewDescription">Description will appear here...</p>
+                    <div class="preview-features" id="previewFeatures">
+                        <!-- Selected features will appear here -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adContact">Contact Number *</label>
+                    <input type="tel" id="adContact" class="form-control" placeholder="03XX-XXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adEmail">Email Address</label>
+                    <input type="email" id="adEmail" class="form-control" placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                        <input type="checkbox" id="agreeTerms" required style="margin-top: 0.2rem;">
+                        <span>
+                            I agree to the <a href="#" style="color: var(--primary);">Terms & Conditions</a> and confirm that this item is legal to sell in Pakistan.
+                        </span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="prevStep(4)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
                     <button class="btn btn-primary" onclick="submitAd()" id="submitBtn">
-                        <i class="fas fa-paper-plane"></i> Publish Ad
+                        <span id="submitText">
+                            <i class="fas fa-paper-plane"></i> Publish Ad
+                        </span>
+                        <span id="submitLoading" style="display: none;">
+                            <div class="loading"></div> Publishing...
+                        </span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Explore</span>
+        </a>
+        <a href="products.html" class="nav-item">
+            <i class="fas fa-th-large"></i>
+            <span>Listings</span>
+        </a>
+        <a href="post-ad.html" class="nav-item active">
+            <div class="nav-sell">
+                <i class="fas fa-plus"></i>
+            </div>
+        </a>
+        <a href="chat.html" class="nav-item">
+            <i class="fas fa-comments"></i>
+            <span>Messages</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
-    <script src="script.js"></script>
 
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJ9mLHHQxnJKtixZrOYy_Vtf-TuwED2dE",
+            authDomain: "trustsell-78c18.firebaseapp.com",
+            databaseURL: "https://trustsell-78c18-default-rtdb.firebaseio.com",
+            projectId: "trustsell-78c18",
+            storageBucket: "trustsell-78c18.firebasestorage.app",
+            messagingSenderId: "909095926042",
+            appId: "1:909095926042:web:3c6eee4f055d21fda794a3",
+            measurementId: "G-4V0DBSRYKW"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Global State
         let currentStep = 1;
+        let selectedCategory = '';
         let selectedFeatures = [];
         let uploadedImages = [];
 
@@ -235,17 +863,70 @@
                 setTimeout(() => {
                     window.location.href = 'auth.html';
                 }, 2000);
+            } else {
+                // Set user email if available
+                document.getElementById('adEmail').value = user.email || '';
             }
         });
 
+        // Load Categories
+        function loadCategories() {
+            const categories = [
+                { name: 'Cars', icon: 'car', sub: 'Cars & Vehicles' },
+                { name: 'Mobiles', icon: 'mobile-alt', sub: 'Mobiles & Tablets' },
+                { name: 'Bikes', icon: 'motorcycle', sub: 'Motorcycles' },
+                { name: 'Property', icon: 'home', sub: 'Houses & Apartments' },
+                { name: 'Jobs', icon: 'briefcase', sub: 'Employment' },
+                { name: 'Electronics', icon: 'laptop', sub: 'Electronics & Appliances' },
+                { name: 'Fashion', icon: 'tshirt', sub: 'Clothing & Accessories' },
+                { name: 'Furniture', icon: 'couch', sub: 'Home Furniture' },
+                { name: 'Services', icon: 'tools', sub: 'Local Services' },
+                { name: 'Animals', icon: 'paw', sub: 'Pets & Animals' },
+                { name: 'Books', icon: 'book', sub: 'Books & Education' },
+                { name: 'Sports', icon: 'futbol', sub: 'Sports & Fitness' }
+            ];
+
+            const categoriesGrid = document.getElementById('categoriesGrid');
+            categoriesGrid.innerHTML = '';
+
+            categories.forEach(category => {
+                const categoryOption = document.createElement('div');
+                categoryOption.className = 'category-option';
+                categoryOption.onclick = () => selectCategory(categoryOption, category.name.toLowerCase());
+                
+                categoryOption.innerHTML = `
+                    <div class="category-icon">
+                        <i class="fas fa-${category.icon}"></i>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 600;">${category.name}</div>
+                    <div style="font-size: 0.7rem; color: #666;">${category.sub}</div>
+                `;
+                
+                categoriesGrid.appendChild(categoryOption);
+            });
+        }
+
+        // City data based on province
+        const cityData = {
+            'sindh': ['Karachi', 'Hyderabad', 'Sukkur', 'Larkana', 'Mirpur Khas', 'Nawabshah', 'Jacobabad'],
+            'punjab': ['Lahore', 'Faisalabad', 'Rawalpindi', 'Multan', 'Gujranwala', 'Sialkot', 'Bahawalpur', 'Sargodha'],
+            'kpk': ['Peshawar', 'Abbottabad', 'Mardan', 'Swat', 'Kohat', 'Bannu', 'Charsadda'],
+            'balochistan': ['Quetta', 'Gwadar', 'Turbat', 'Khuzdar', 'Chaman', 'Zhob'],
+            'islamabad': ['Islamabad'],
+            'gilgit': ['Gilgit', 'Skardu', 'Hunza'],
+            'ajk': ['Muzaffarabad', 'Mirpur', 'Kotli']
+        };
+
+        // Step Navigation
         function showStep(step) {
             document.querySelectorAll('.form-section').forEach(section => {
                 section.classList.remove('active');
             });
             document.getElementById('step' + step).classList.add('active');
 
+            // Update step indicators
             document.querySelectorAll('.step').forEach(stepEl => {
-                stepEl.classList.remove('active');
+                stepEl.classList.remove('active', 'completed');
                 if (parseInt(stepEl.dataset.step) === step) {
                     stepEl.classList.add('active');
                 }
@@ -253,74 +934,49 @@
                     stepEl.classList.add('completed');
                 }
             });
+
+            currentStep = step;
+            
+            // Update preview if we're on the review step
+            if (step === 5) {
+                updatePreview();
+            }
         }
 
         function nextStep(step) {
-            currentStep = step;
             showStep(step);
-            updateReview();
         }
 
         function prevStep(step) {
-            currentStep = step;
             showStep(step);
         }
 
-        function validateStep1() {
-            const category = document.getElementById('category').value;
-            const title = document.getElementById('title').value.trim();
-            const description = document.getElementById('description').value.trim();
-
-            if (!category) {
-                showNotification('Please select a category', 'error');
-                return;
-            }
-
-            if (!title || title.length < 10) {
-                showNotification('Title must be at least 10 characters', 'error');
-                return;
-            }
-
-            if (!description || description.length < 50) {
-                showNotification('Description must be at least 50 characters', 'error');
-                return;
-            }
-
-            nextStep(2);
+        // Category Selection
+        function selectCategory(element, category) {
+            document.querySelectorAll('.category-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedCategory = category;
         }
 
-        function validateStep2() {
-            const price = document.getElementById('price').value;
-            const condition = document.getElementById('condition').value;
-            const location = document.getElementById('location').value;
-
-            if (!price || price < 1) {
-                showNotification('Please enter a valid price', 'error');
-                return;
+        // Province Change Handler
+        document.getElementById('adProvince').addEventListener('change', function() {
+            const province = this.value;
+            const citySelect = document.getElementById('adCity');
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            
+            if (cityData[province]) {
+                cityData[province].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.toLowerCase();
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
             }
+        });
 
-            if (!condition) {
-                showNotification('Please select condition', 'error');
-                return;
-            }
-
-            if (!location) {
-                showNotification('Please select location', 'error');
-                return;
-            }
-
-            nextStep(3);
-        }
-
-        function validateStep3() {
-            if (uploadedImages.length === 0) {
-                showNotification('Please upload at least one image', 'error');
-                return;
-            }
-
-            nextStep(4);
-        }
-
+        // Feature Toggle
         function toggleFeature(element, feature) {
             element.classList.toggle('selected');
             
@@ -330,36 +986,10 @@
                 const index = selectedFeatures.indexOf(feature);
                 if (index > -1) selectedFeatures.splice(index, 1);
             }
-            
-            updateReview();
         }
 
-        function updateReview() {
-            document.getElementById('reviewTitle').textContent = 
-                document.getElementById('title').value || 'Ad Title';
-            document.getElementById('reviewDescription').textContent = 
-                document.getElementById('description').value || 'Description will appear here';
-            document.getElementById('reviewPrice').textContent = 
-                'Rs ' + (document.getElementById('price').value || '0');
-            document.getElementById('reviewLocation').textContent = 
-                document.getElementById('location').options[document.getElementById('location').selectedIndex]?.text || 'Location';
-            
-            // Update features
-            const featuresContainer = document.getElementById('reviewFeatures');
-            if (selectedFeatures.length > 0) {
-                featuresContainer.innerHTML = `
-                    <div style="margin-top: 1rem;">
-                        <strong>Features:</strong> ${selectedFeatures.map(f => f.charAt(0).toUpperCase() + f.slice(1)).join(', ')}
-                    </div>
-                `;
-            } else {
-                featuresContainer.innerHTML = '';
-            }
-        }
-
-        // Image upload functionality
+        // Image Upload Handling
         document.getElementById('imageInput').addEventListener('change', function(e) {
-            const preview = document.getElementById('imagePreview');
             const files = Array.from(e.target.files);
             
             if (files.length + uploadedImages.length > 12) {
@@ -389,7 +1019,7 @@
             previewItem.className = 'preview-item';
             previewItem.innerHTML = `
                 <img src="${imageData.url}" alt="Preview">
-                <button class="remove-image" onclick="removeImage(${index})" style="position: absolute; top: 5px; right: 5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer;">
+                <button class="remove-image" onclick="removeImage(${index})">
                     <i class="fas fa-times"></i>
                 </button>
             `;
@@ -402,19 +1032,109 @@
             uploadedImages.forEach((image, i) => displayImagePreview(image, i));
         }
 
-        async function submitAd() {
-            if (!document.getElementById('agreeTerms').checked) {
-                showNotification('Please agree to the terms and conditions', 'error');
+        // Step Validation
+        function validateStep1() {
+            if (!selectedCategory) {
+                showNotification('Please select a category', 'error');
+                return;
+            }
+            nextStep(2);
+        }
+
+        function validateStep2() {
+            const title = document.getElementById('adTitle').value.trim();
+            const description = document.getElementById('adDescription').value.trim();
+            const price = document.getElementById('adPrice').value;
+            const condition = document.getElementById('adCondition').value;
+
+            if (!title || title.length < 10) {
+                showNotification('Title must be at least 10 characters', 'error');
                 return;
             }
 
-            const contactNumber = document.getElementById('contactNumber').value.trim();
-            if (!contactNumber) {
+            if (!description || description.length < 50) {
+                showNotification('Description must be at least 50 characters', 'error');
+                return;
+            }
+
+            if (!price || price < 1) {
+                showNotification('Please enter a valid price', 'error');
+                return;
+            }
+
+            if (!condition) {
+                showNotification('Please select condition', 'error');
+                return;
+            }
+
+            nextStep(3);
+        }
+
+        function validateStep3() {
+            const province = document.getElementById('adProvince').value;
+            const city = document.getElementById('adCity').value;
+
+            if (!province) {
+                showNotification('Please select province', 'error');
+                return;
+            }
+
+            if (!city) {
+                showNotification('Please select city', 'error');
+                return;
+            }
+
+            nextStep(4);
+        }
+
+        function validateStep4() {
+            if (uploadedImages.length === 0) {
+                showNotification('Please upload at least one image', 'error');
+                return;
+            }
+            nextStep(5);
+        }
+
+        // Preview Update
+        function updatePreview() {
+            document.getElementById('previewTitle').textContent = document.getElementById('adTitle').value;
+            document.getElementById('previewPrice').textContent = 'Rs ' + (document.getElementById('adPrice').value || '0');
+            document.getElementById('previewDescription').textContent = document.getElementById('adDescription').value;
+            
+            const province = document.getElementById('adProvince').options[document.getElementById('adProvince').selectedIndex]?.text;
+            const city = document.getElementById('adCity').options[document.getElementById('adCity').selectedIndex]?.text;
+            document.getElementById('previewLocation').textContent = `${city}, ${province}`;
+
+            // Update features preview
+            const featuresContainer = document.getElementById('previewFeatures');
+            featuresContainer.innerHTML = '';
+            selectedFeatures.forEach(feature => {
+                const featureBadge = document.createElement('div');
+                featureBadge.className = 'preview-feature';
+                featureBadge.textContent = feature.charAt(0).toUpperCase() + feature.slice(1);
+                featuresContainer.appendChild(featureBadge);
+            });
+        }
+
+        // Submit Ad
+        async function submitAd() {
+            const contact = document.getElementById('adContact').value.trim();
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            if (!contact) {
                 showNotification('Please enter contact number', 'error');
                 return;
             }
 
-            showLoading('Publishing your ad...');
+            if (!agreeTerms) {
+                showNotification('Please agree to the terms and conditions', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('submitText').style.display = 'none';
+            document.getElementById('submitLoading').style.display = 'inline';
+            document.getElementById('submitBtn').disabled = true;
 
             try {
                 // Upload images to Firebase Storage
@@ -424,20 +1144,29 @@
                     imageUrls.push(imageUrl);
                 }
 
+                // Get user data
+                const user = auth.currentUser;
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.data();
+
                 // Save product data to Firestore
                 const productData = {
-                    title: document.getElementById('title').value,
-                    description: document.getElementById('description').value,
-                    price: parseInt(document.getElementById('price').value),
-                    category: document.getElementById('category').value,
-                    condition: document.getElementById('condition').value,
-                    location: document.getElementById('location').value,
-                    contactNumber: contactNumber,
+                    title: document.getElementById('adTitle').value,
+                    description: document.getElementById('adDescription').value,
+                    price: parseInt(document.getElementById('adPrice').value),
+                    category: selectedCategory,
+                    condition: document.getElementById('adCondition').value,
+                    province: document.getElementById('adProvince').value,
+                    city: document.getElementById('adCity').value,
+                    area: document.getElementById('adArea').value,
+                    address: document.getElementById('adAddress').value,
+                    contactNumber: contact,
+                    contactEmail: document.getElementById('adEmail').value,
                     images: imageUrls,
                     features: selectedFeatures,
-                    sellerId: AppState.currentUser.uid,
-                    sellerName: AppState.userData.name,
-                    sellerVerified: AppState.userData.verified || false,
+                    sellerId: user.uid,
+                    sellerName: userData.name,
+                    sellerVerified: userData.verified || false,
                     status: 'active',
                     views: 0,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -455,8 +1184,11 @@
             } catch (error) {
                 console.error('Error publishing ad:', error);
                 showNotification('Error publishing ad. Please try again.', 'error');
-            } finally {
-                hideLoading();
+                
+                // Reset button
+                document.getElementById('submitText').style.display = 'inline';
+                document.getElementById('submitLoading').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
             }
         }
 
@@ -467,13 +1199,34 @@
             return await imageRef.getDownloadURL();
         }
 
-        // Initialize
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Add input listeners for real-time review update
-            document.getElementById('title').addEventListener('input', updateReview);
-            document.getElementById('description').addEventListener('input', updateReview);
-            document.getElementById('price').addEventListener('input', updateReview);
-            document.getElementById('location').addEventListener('change', updateReview);
+            loadCategories();
+            
+            // Add input listeners for real-time validation
+            document.getElementById('adTitle').addEventListener('input', function() {
+                if (this.value.length > 100) {
+                    this.value = this.value.substring(0, 100);
+                }
+            });
+            
+            document.getElementById('adDescription').addEventListener('input', function() {
+                if (this.value.length > 1000) {
+                    this.value = this.value.substring(0, 1000);
+                }
+            });
         });
     </script>
 </body>
