@@ -4,338 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trust Sell - Pakistan's Most Trusted Marketplace</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Base Styles - Mobile First */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #FF6B35;
-            --secondary: #004E89;
-            --accent: #00A896;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --gradient: linear-gradient(135deg, #FF6B35, #004E89);
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --radius: 12px;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f5f5;
-            line-height: 1.6;
-            padding-bottom: 80px; /* Space for bottom nav */
-        }
-
-        /* Navigation */
-        .navbar {
-            background: white;
-            padding: 1rem;
-            box-shadow: var(--shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .search-container {
-            flex: 1;
-            margin: 0 1rem;
-            position: relative;
-        }
-
-        .search-bar {
-            display: flex;
-            background: white;
-            border-radius: 25px;
-            padding: 8px 15px;
-            box-shadow: var(--shadow);
-        }
-
-        .search-bar input {
-            flex: 1;
-            border: none;
-            outline: none;
-            padding: 8px;
-            font-size: 14px;
-        }
-
-        .voice-search {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 0 8px;
-        }
-
-        .nav-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-icon {
-            color: var(--dark);
-            font-size: 1.2rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            margin-top: 70px;
-            padding: 1.5rem;
-            background: var(--gradient);
-            color: white;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: white;
-            color: var(--primary);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-
-        /* Categories */
-        .categories {
-            padding: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-
-        .category-card {
-            background: white;
-            padding: 1rem;
-            border-radius: var(--radius);
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-        }
-
-        .category-card:active {
-            transform: scale(0.95);
-        }
-
-        .category-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            padding: 1.5rem;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .action-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        .action-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 0.8rem 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: var(--dark);
-            font-size: 0.8rem;
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .nav-sell {
-            background: var(--primary);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -10px;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
-        }
-
-        /* Location Selector */
-        .location-selector {
-            padding: 1rem 1.5rem;
-            background: white;
-            border-bottom: 1px solid #eee;
-        }
-
-        .location-current {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        /* Voice Search Modal */
-        .voice-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .voice-modal.active {
-            display: flex;
-        }
-
-        .voice-content {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius);
-            text-align: center;
-            max-width: 300px;
-            width: 90%;
-        }
-
-        .voice-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        /* Tablet Styles */
-        @media (min-width: 768px) {
-            .categories-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .quick-actions {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-        }
-
-        /* Desktop Styles */
-        @media (min-width: 1024px) {
-            .categories-grid {
-                grid-template-columns: repeat(6, 1fr);
-            }
-            
-            .bottom-nav {
-                display: none;
-            }
-            
-            body {
-                padding-bottom: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <a href="index.html" class="logo">
                 <i class="fas fa-shield-alt"></i> TrustSell
-            </div>
+            </a>
             <div class="search-container">
                 <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
                     <input type="text" placeholder="Search cars, mobiles, jobs..." id="searchInput">
                     <button class="voice-search" id="voiceSearchBtn">
                         <i class="fas fa-microphone"></i>
@@ -343,8 +26,11 @@
                 </div>
             </div>
             <div class="nav-actions">
-                <a href="auth.html" class="nav-icon">
+                <a href="auth.html" class="nav-icon auth-link">
                     <i class="far fa-user"></i>
+                </a>
+                <a href="chat.html" class="nav-icon">
+                    <i class="far fa-comments"></i>
                 </a>
             </div>
         </div>
@@ -354,70 +40,97 @@
     <div class="location-selector">
         <div class="location-current">
             <i class="fas fa-map-marker-alt"></i>
-            <span id="currentLocation">Loading location...</span>
+            <span id="currentLocation">All Pakistan</span>
+            <i class="fas fa-chevron-down location-dropdown"></i>
         </div>
     </div>
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Buy & Sell Everything</h1>
-        <p>Pakistan's Most Trusted Marketplace</p>
-        <div class="hero-buttons">
-            <a href="products.html" class="btn btn-primary">Start Shopping</a>
-            <a href="post-ad.html" class="btn btn-outline">Sell Now</a>
+        <div class="hero-content">
+            <h1 class="hero-title">Buy & Sell Everything</h1>
+            <p class="hero-subtitle">Pakistan's Most Trusted Marketplace</p>
+            <div class="hero-buttons">
+                <a href="products.html" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Start Shopping
+                </a>
+                <a href="post-ad.html" class="btn btn-outline">
+                    <i class="fas fa-plus"></i> Sell Now
+                </a>
+            </div>
+        </div>
+        <div class="hero-background">
+            <div class="floating-card card-1">
+                <i class="fas fa-car"></i>
+                <span>Cars</span>
+            </div>
+            <div class="floating-card card-2">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Mobiles</span>
+            </div>
+            <div class="floating-card card-3">
+                <i class="fas fa-home"></i>
+                <span>Property</span>
+            </div>
         </div>
     </section>
 
     <!-- Categories -->
-    <section class="categories">
+    <section class="categories section">
         <h2 class="section-title">Popular Categories</h2>
         <div class="categories-grid" id="categoriesGrid">
-            <!-- Categories will be loaded dynamically -->
+            <!-- Categories loaded dynamically -->
         </div>
     </section>
 
-    <!-- Quick Actions -->
-    <section class="quick-actions">
-        <div class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-bolt"></i>
-            </div>
-            <h3>Quick Sell</h3>
-            <p>Sell in minutes</p>
+    <!-- Featured Products -->
+    <section class="featured section">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <a href="products.html" class="see-all">See All</a>
         </div>
-        <div class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3>Verified</h3>
-            <p>Trusted sellers</p>
+        <div class="products-grid" id="featuredProducts">
+            <!-- Featured products loaded dynamically -->
         </div>
-        <div class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-truck"></i>
+    </section>
+
+    <!-- Trust Features -->
+    <section class="trust-features section">
+        <div class="trust-container">
+            <div class="trust-card">
+                <div class="trust-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>AI Verified</h3>
+                <p>Advanced AI security checks for all listings</p>
             </div>
-            <h3>Delivery</h3>
-            <p>Across Pakistan</p>
-        </div>
-        <div class="action-card">
-            <div class="action-icon">
-                <i class="fas fa-headset"></i>
+            <div class="trust-card">
+                <div class="trust-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Instant Chat</h3>
+                <p>Real-time messaging with sellers</p>
             </div>
-            <h3>Support</h3>
-            <p>24/7 Help</p>
+            <div class="trust-card">
+                <div class="trust-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3>Safe Delivery</h3>
+                <p>Secure delivery across Pakistan</p>
+            </div>
         </div>
     </section>
 
     <!-- Voice Search Modal -->
-    <div class="voice-modal" id="voiceModal">
-        <div class="voice-content">
+    <div class="modal voice-modal" id="voiceModal">
+        <div class="modal-content">
             <div class="voice-icon">
                 <i class="fas fa-microphone"></i>
             </div>
             <h3>Speak Now</h3>
             <p>Say what you're looking for...</p>
-            <div id="voiceResult"></div>
-            <button class="btn btn-primary" onclick="stopVoiceRecognition()" style="margin-top: 1rem;">
+            <div id="voiceResult" class="voice-result"></div>
+            <button class="btn btn-primary mt-2" id="stopVoiceBtn">
                 Stop Listening
             </button>
         </div>
@@ -426,205 +139,34 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span>Explore</span>
+            <i class="fas fa-home nav-icon"></i>
+            <span>Home</span>
         </a>
         <a href="products.html" class="nav-item">
-            <i class="fas fa-th-large"></i>
-            <span>Listings</span>
+            <i class="fas fa-search nav-icon"></i>
+            <span>Explore</span>
         </a>
-        <a href="post-ad.html" class="nav-item">
+        <a href="post-ad.html" class="nav-item sell-btn">
             <div class="nav-sell">
                 <i class="fas fa-plus"></i>
             </div>
         </a>
         <a href="chat.html" class="nav-item">
-            <i class="fas fa-comments"></i>
-            <span>Messages</span>
+            <i class="far fa-comments nav-icon"></i>
+            <span>Chats</span>
         </a>
         <a href="profile.html" class="nav-item">
-            <i class="fas fa-user"></i>
+            <i class="far fa-user nav-icon"></i>
             <span>Profile</span>
         </a>
     </nav>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBJ9mLHHQxnJKtixZrOYy_Vtf-TuwED2dE",
-            authDomain: "trustsell-78c18.firebaseapp.com",
-            databaseURL: "https://trustsell-78c18-default-rtdb.firebaseio.com",
-            projectId: "trustsell-78c18",
-            storageBucket: "trustsell-78c18.firebasestorage.app",
-            messagingSenderId: "909095926042",
-            appId: "1:909095926042:web:3c6eee4f055d21fda794a3",
-            measurementId: "G-4V0DBSRYKW"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Global State
-        let currentUser = null;
-        let recognition = null;
-
-        // Check Authentication State
-        auth.onAuthStateChanged((user) => {
-            currentUser = user;
-            updateAuthUI();
-        });
-
-        function updateAuthUI() {
-            const authIcons = document.querySelectorAll('.fa-user');
-            authIcons.forEach(icon => {
-                if (currentUser) {
-                    icon.className = 'fas fa-user';
-                } else {
-                    icon.className = 'far fa-user';
-                }
-            });
-        }
-
-        // Load Categories
-        function loadCategories() {
-            const categories = [
-                { name: 'Cars', icon: 'car', count: '15K' },
-                { name: 'Mobiles', icon: 'mobile-alt', count: '25K' },
-                { name: 'Bikes', icon: 'motorcycle', count: '8K' },
-                { name: 'Property', icon: 'home', count: '12K' },
-                { name: 'Jobs', icon: 'briefcase', count: '5K' },
-                { name: 'Electronics', icon: 'laptop', count: '18K' },
-                { name: 'Fashion', icon: 'tshirt', count: '22K' },
-                { name: 'Furniture', icon: 'couch', count: '7K' },
-                { name: 'Services', icon: 'tools', count: '3K' },
-                { name: 'Animals', icon: 'paw', count: '4K' },
-                { name: 'Books', icon: 'book', count: '2K' },
-                { name: 'Sports', icon: 'futbol', count: '6K' }
-            ];
-
-            const categoriesGrid = document.getElementById('categoriesGrid');
-            categoriesGrid.innerHTML = '';
-
-            categories.forEach(category => {
-                const categoryCard = document.createElement('div');
-                categoryCard.className = 'category-card';
-                categoryCard.onclick = () => filterByCategory(category.name.toLowerCase());
-                
-                categoryCard.innerHTML = `
-                    <div class="category-icon">
-                        <i class="fas fa-${category.icon}"></i>
-                    </div>
-                    <h4>${category.name}</h4>
-                    <small>${category.count}+</small>
-                `;
-                
-                categoriesGrid.appendChild(categoryCard);
-            });
-        }
-
-        // Voice Search Functionality
-        function initializeVoiceSearch() {
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                
-                recognition.onstart = function() {
-                    document.getElementById('voiceModal').classList.add('active');
-                };
-                
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    document.getElementById('searchInput').value = transcript;
-                    document.getElementById('voiceResult').innerHTML = `
-                        <p>You said: <strong>${transcript}</strong></p>
-                    `;
-                    
-                    // Auto-search after 1 second
-                    setTimeout(() => {
-                        searchProducts(transcript);
-                    }, 1000);
-                };
-                
-                recognition.onerror = function(event) {
-                    console.error('Speech recognition error', event.error);
-                    showNotification('Voice search error: ' + event.error, 'error');
-                };
-                
-                recognition.onend = function() {
-                    document.getElementById('voiceModal').classList.remove('active');
-                };
-            } else {
-                showNotification('Voice search not supported in your browser', 'warning');
-            }
-        }
-
-        function startVoiceRecognition() {
-            if (recognition) {
-                recognition.start();
-            } else {
-                initializeVoiceSearch();
-                setTimeout(() => {
-                    if (recognition) recognition.start();
-                }, 100);
-            }
-        }
-
-        function stopVoiceRecognition() {
-            if (recognition) {
-                recognition.stop();
-            }
-        }
-
-        function searchProducts(query) {
-            if (query.trim()) {
-                window.location.href = `products.html?search=${encodeURIComponent(query)}`;
-            }
-        }
-
-        function filterByCategory(category) {
-            window.location.href = `products.html?category=${category}`;
-        }
-
-        // Location System
-        function initializeLocation() {
-            const savedLocation = localStorage.getItem('trustSell_location');
-            if (savedLocation) {
-                document.getElementById('currentLocation').textContent = savedLocation;
-            } else {
-                // Default location
-                document.getElementById('currentLocation').textContent = 'All Pakistan';
-            }
-        }
-
-        function showNotification(message, type = 'success') {
-            // Simple notification implementation
-            alert(message); // Replace with better UI notification
-        }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCategories();
-            initializeVoiceSearch();
-            initializeLocation();
-            
-            // Event listeners
-            document.getElementById('voiceSearchBtn').addEventListener('click', startVoiceRecognition);
-            
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchProducts(this.value);
-                }
-            });
-        });
-    </script>
+    <script src="firebase.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
