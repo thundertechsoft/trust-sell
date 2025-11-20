@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search results on TrustSell - Find products, services and more across Pakistan">
+    <title>Search Results - TrustSell</title>
+    <link rel="stylesheet" href="css/trustsell.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">TrustSell</a>
+            </div>
+            <div class="nav-search">
+                <form class="search-form" action="search-results.html">
+                    <input type="text" placeholder="Search..." name="q" id="searchInput">
+                    <select name="location" id="locationFilter">
+                        <option value="">All Pakistan</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="nav-actions">
+                <a href="sell.html" class="btn-sell">SELL</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main search-main">
+        <div class="search-container">
+            <aside class="search-filters">
+                <h4>Filters</h4>
+                
+                <div class="filter-group">
+                    <h5>Category</h5>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <h5>Price Range</h5>
+                    <div class="price-inputs">
+                        <input type="number" placeholder="Min" id="minPrice">
+                        <input type="number" placeholder="Max" id="maxPrice">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h5>Condition</h5>
+                    <label><input type="checkbox" value="new"> New</label>
+                    <label><input type="checkbox" value="used"> Used</label>
+                </div>
+                
+                <div class="filter-group">
+                    <h5>Location</h5>
+                    <select id="cityFilter">
+                        <option value="">All Cities</option>
+                    </select>
+                </div>
+                
+                <button class="btn-primary" id="applyFilters">Apply Filters</button>
+            </aside>
+            
+            <div class="search-results">
+                <div class="results-header">
+                    <h3 id="resultsCount">Search Results</h3>
+                    <div class="view-options">
+                        <button class="view-btn active" data-view="grid">Grid</button>
+                        <button class="view-btn" data-view="list">List</button>
+                    </div>
+                </div>
+                
+                <div class="results-grid" id="searchResults">
+                    <!-- Search results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="js/trustsell.js"></script>
+</body>
+</html>
