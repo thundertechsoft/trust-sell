@@ -3,170 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trust Sell - Pakistan's Most Trusted Marketplace</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="description" content="TrustSell - Pakistan's Safest & Fastest Classified Marketplace. Buy and sell mobiles, vehicles, property, jobs, services and more with trust.">
+    <title>TrustSell - Pakistan's Safest Classified Marketplace</title>
+    <link rel="stylesheet" href="css/trustsell.css">
+    <link rel="canonical" href="https://trustsell.pk/">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <i class="fas fa-shield-alt"></i> TrustSell
-            </a>
-            <div class="search-container">
-                <div class="search-bar">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" placeholder="Search cars, mobiles, jobs..." id="searchInput">
-                    <button class="voice-search" id="voiceSearchBtn">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                </div>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">TrustSell</a>
+            </div>
+            <div class="nav-search">
+                <form class="search-form" action="search-results.html">
+                    <input type="text" placeholder="Search for products, brands and categories..." name="q">
+                    <select name="location">
+                        <option value="">All Pakistan</option>
+                        <option value="karachi">Karachi</option>
+                        <option value="lahore">Lahore</option>
+                        <option value="islamabad">Islamabad</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
             </div>
             <div class="nav-actions">
-                <a href="auth.html" class="nav-icon auth-link">
-                    <i class="far fa-user"></i>
+                <a href="sell.html" class="btn-sell">SELL</a>
+                <a href="login.html" class="btn-login">Login</a>
+                <a href="chat.html" class="btn-chat">Chat</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Buy & Sell with Trust in Pakistan</h1>
+                <p>Fast, Safe, and Modern Classified Marketplace</p>
+            </div>
+        </section>
+
+        <section class="categories">
+            <h2>Popular Categories</h2>
+            <div class="category-grid">
+                <a href="categories.html?cat=mobiles" class="category-card">
+                    <div class="category-icon">📱</div>
+                    <span>Mobiles</span>
                 </a>
-                <a href="chat.html" class="nav-icon">
-                    <i class="far fa-comments"></i>
+                <a href="categories.html?cat=vehicles" class="category-card">
+                    <div class="category-icon">🚗</div>
+                    <span>Vehicles</span>
+                </a>
+                <a href="categories.html?cat=property" class="category-card">
+                    <div class="category-icon">🏠</div>
+                    <span>Property</span>
+                </a>
+                <a href="categories.html?cat=jobs" class="category-card">
+                    <div class="category-icon">💼</div>
+                    <span>Jobs</span>
+                </a>
+                <a href="categories.html?cat=services" class="category-card">
+                    <div class="category-icon">🔧</div>
+                    <span>Services</span>
+                </a>
+                <a href="categories.html?cat=electronics" class="category-card">
+                    <div class="category-icon">📺</div>
+                    <span>Electronics</span>
+                </a>
+                <a href="categories.html?cat=furniture" class="category-card">
+                    <div class="category-icon">🛋️</div>
+                    <span>Furniture</span>
+                </a>
+                <a href="categories.html" class="category-card view-all">
+                    <div class="category-icon">🔍</div>
+                    <span>View All</span>
                 </a>
             </div>
-        </div>
-    </nav>
+        </section>
 
-    <!-- Location Selector -->
-    <div class="location-selector">
-        <div class="location-current">
-            <i class="fas fa-map-marker-alt"></i>
-            <span id="currentLocation">All Pakistan</span>
-            <i class="fas fa-chevron-down location-dropdown"></i>
-        </div>
-    </div>
+        <section class="featured-ads">
+            <h2>Featured Listings</h2>
+            <div class="ads-grid" id="featuredAds">
+                <!-- Real listings will be loaded from Firebase -->
+            </div>
+        </section>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Buy & Sell Everything</h1>
-            <p class="hero-subtitle">Pakistan's Most Trusted Marketplace</p>
-            <div class="hero-buttons">
-                <a href="products.html" class="btn btn-primary">
-                    <i class="fas fa-shopping-bag"></i> Start Shopping
-                </a>
-                <a href="post-ad.html" class="btn btn-outline">
-                    <i class="fas fa-plus"></i> Sell Now
-                </a>
+        <section class="banner">
+            <div class="banner-content">
+                <h3>Safe & Secure Trading</h3>
+                <p>Verified sellers • Secure chat • Trusted community</p>
+                <a href="sell.html" class="btn-primary">Start Selling Now</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>TrustSell</h4>
+                <p>Pakistan's fastest growing classified marketplace</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+                <a href="help.html">Help & Support</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="terms.html">Terms of Use</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="faq.html">FAQ</a>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
             </div>
         </div>
-        <div class="hero-background">
-            <div class="floating-card card-1">
-                <i class="fas fa-car"></i>
-                <span>Cars</span>
-            </div>
-            <div class="floating-card card-2">
-                <i class="fas fa-mobile-alt"></i>
-                <span>Mobiles</span>
-            </div>
-            <div class="floating-card card-3">
-                <i class="fas fa-home"></i>
-                <span>Property</span>
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 TrustSell. All rights reserved.</p>
         </div>
-    </section>
+    </footer>
 
-    <!-- Categories -->
-    <section class="categories section">
-        <h2 class="section-title">Popular Categories</h2>
-        <div class="categories-grid" id="categoriesGrid">
-            <!-- Categories loaded dynamically -->
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="featured section">
-        <div class="section-header">
-            <h2 class="section-title">Featured Products</h2>
-            <a href="products.html" class="see-all">See All</a>
-        </div>
-        <div class="products-grid" id="featuredProducts">
-            <!-- Featured products loaded dynamically -->
-        </div>
-    </section>
-
-    <!-- Trust Features -->
-    <section class="trust-features section">
-        <div class="trust-container">
-            <div class="trust-card">
-                <div class="trust-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3>AI Verified</h3>
-                <p>Advanced AI security checks for all listings</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <h3>Instant Chat</h3>
-                <p>Real-time messaging with sellers</p>
-            </div>
-            <div class="trust-card">
-                <div class="trust-icon">
-                    <i class="fas fa-truck"></i>
-                </div>
-                <h3>Safe Delivery</h3>
-                <p>Secure delivery across Pakistan</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Voice Search Modal -->
-    <div class="modal voice-modal" id="voiceModal">
-        <div class="modal-content">
-            <div class="voice-icon">
-                <i class="fas fa-microphone"></i>
-            </div>
-            <h3>Speak Now</h3>
-            <p>Say what you're looking for...</p>
-            <div id="voiceResult" class="voice-result"></div>
-            <button class="btn btn-primary mt-2" id="stopVoiceBtn">
-                Stop Listening
-            </button>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <i class="fas fa-home nav-icon"></i>
-            <span>Home</span>
-        </a>
-        <a href="products.html" class="nav-item">
-            <i class="fas fa-search nav-icon"></i>
-            <span>Explore</span>
-        </a>
-        <a href="post-ad.html" class="nav-item sell-btn">
-            <div class="nav-sell">
-                <i class="fas fa-plus"></i>
-            </div>
-        </a>
-        <a href="chat.html" class="nav-item">
-            <i class="far fa-comments nav-icon"></i>
-            <span>Chats</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="far fa-user nav-icon"></i>
-            <span>Profile</span>
-        </a>
-    </nav>
-
-    <!-- Loading Spinner -->
-    <div class="loading-spinner" id="loadingSpinner">
-        <div class="spinner"></div>
-    </div>
-
-    <script src="firebase.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="js/trustsell.js"></script>
 </body>
 </html>
