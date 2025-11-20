@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to TrustSell - Access your account to buy, sell and chat securely">
+    <title>Login - TrustSell Pakistan</title>
+    <link rel="stylesheet" href="css/trustsell.css">
+    <link rel="canonical" href="https://trustsell.pk/login">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">TrustSell</a>
+            </div>
+            <div class="nav-actions">
+                <a href="index.html" class="btn-secondary">Back to Home</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main auth-main">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Welcome to TrustSell</h2>
+                <p>Login to continue buying and selling</p>
+                
+                <div class="auth-options">
+                    <button class="auth-btn google-btn" id="googleLogin">
+                        Continue with Google
+                    </button>
+                    <button class="auth-btn facebook-btn" id="facebookLogin">
+                        Continue with Facebook
+                    </button>
+                </div>
+
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email or Phone</label>
+                        <input type="text" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+
+                <div class="auth-links">
+                    <a href="#">Forgot Password?</a>
+                    <span>Don't have an account? <a href="login.html?register=true">Sign Up</a></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="js/trustsell.js"></script>
+</body>
+</html>
