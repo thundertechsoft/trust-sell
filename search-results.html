@@ -3,83 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Search results on TrustSell - Find products, services and more across Pakistan">
     <title>Search Results - TrustSell</title>
+    <meta name="description" content="Search results for electronics, mobiles, cars, property and more on TrustSell Pakistan.">
     <link rel="stylesheet" href="css/trustsell.css">
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">TrustSell</a>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>TrustSell</h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for electronics & appliances" id="searchInput" value="iPhone">
+                    <button class="search-btn">Search</button>
+                </div>
             </div>
-            <div class="nav-search">
-                <form class="search-form" action="search-results.html">
-                    <input type="text" placeholder="Search..." name="q" id="searchInput">
-                    <select name="location" id="locationFilter">
-                        <option value="">All Pakistan</option>
-                    </select>
-                    <button type="submit">Search</button>
-                </form>
-            </div>
-            <div class="nav-actions">
-                <a href="sell.html" class="btn-sell">SELL</a>
-            </div>
-        </nav>
+        </div>
     </header>
 
-    <main class="main search-main">
-        <div class="search-container">
-            <aside class="search-filters">
-                <h4>Filters</h4>
-                
-                <div class="filter-group">
-                    <h5>Category</h5>
-                    <select id="categoryFilter">
-                        <option value="">All Categories</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <h5>Price Range</h5>
-                    <div class="price-inputs">
-                        <input type="number" placeholder="Min" id="minPrice">
-                        <input type="number" placeholder="Max" id="maxPrice">
+    <main class="main-content">
+        <div class="container">
+            <div class="search-results-header">
+                <h2>Search Results for "iPhone"</h2>
+                <div class="results-count">124 results found</div>
+            </div>
+
+            <div class="search-layout">
+                <aside class="filters-sidebar">
+                    <div class="filter-section">
+                        <h4>Category</h4>
+                        <select class="filter-select">
+                            <option>All Categories</option>
+                            <option>Mobiles</option>
+                            <option>Tablets</option>
+                            <option>Accessories</option>
+                        </select>
                     </div>
-                </div>
-                
-                <div class="filter-group">
-                    <h5>Condition</h5>
-                    <label><input type="checkbox" value="new"> New</label>
-                    <label><input type="checkbox" value="used"> Used</label>
-                </div>
-                
-                <div class="filter-group">
-                    <h5>Location</h5>
-                    <select id="cityFilter">
-                        <option value="">All Cities</option>
-                    </select>
-                </div>
-                
-                <button class="btn-primary" id="applyFilters">Apply Filters</button>
-            </aside>
-            
-            <div class="search-results">
-                <div class="results-header">
-                    <h3 id="resultsCount">Search Results</h3>
-                    <div class="view-options">
-                        <button class="view-btn active" data-view="grid">Grid</button>
-                        <button class="view-btn" data-view="list">List</button>
+
+                    <div class="filter-section">
+                        <h4>Price Range</h4>
+                        <div class="price-inputs">
+                            <input type="number" placeholder="Min" class="price-input">
+                            <input type="number" placeholder="Max" class="price-input">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="results-grid" id="searchResults">
-                    <!-- Search results will be loaded here -->
-                </div>
+
+                    <div class="filter-section">
+                        <h4>Condition</h4>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" checked> New
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" checked> Used
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox"> Refurbished
+                        </label>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Location</h4>
+                        <select class="filter-select">
+                            <option>All Pakistan</option>
+                            <option>Karachi</option>
+                            <option>Lahore</option>
+                            <option>Islamabad</option>
+                            <option>Rawalpindi</option>
+                        </select>
+                    </div>
+
+                    <button class="apply-filters-btn">Apply Filters</button>
+                    <button class="clear-filters-btn">Clear All</button>
+                </aside>
+
+                <section class="results-section">
+                    <div class="results-toolbar">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid">Grid</button>
+                            <button class="view-btn" data-view="list">List</button>
+                        </div>
+                        <div class="sort-options">
+                            <select class="sort-select">
+                                <option>Most Relevant</option>
+                                <option>Newest First</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="results-grid" id="searchResults">
+                        <!-- Search results will be loaded here -->
+                    </div>
+
+                    <div class="pagination">
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn next">Next</button>
+                    </div>
+                </section>
             </div>
         </div>
     </main>
 
-    <script type="module" src="js/trustsell.js"></script>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="chat.html" class="nav-item">
+            <span>💬</span>
+            <span>Chat</span>
+        </a>
+        <a href="sell.html" class="nav-item">
+            <span>➕</span>
+            <span>Sell</span>
+        </a>
+        <a href="my-ads.html" class="nav-item">
+            <span>📰</span>
+            <span>My Ads</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>👤</span>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <script src="js/trustsell.js"></script>
 </body>
 </html>
