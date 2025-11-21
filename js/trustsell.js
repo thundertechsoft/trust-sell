@@ -1,39 +1,40 @@
-// TrustSell JavaScript - Complete Functionality with Firebase
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// TrustSell JavaScript - Complete Functionality with Firebase Integration
+
+// Firebase Configuration and Initialization
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 import { 
     getAuth, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
-    FacebookAuthProvider,
+    signInWithEmailAndPassword, 
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-} from "firebase/auth";
+    signInWithPopup,
+    GoogleAuthProvider,
+    FacebookAuthProvider,
+    signInWithPhoneNumber,
+    RecaptchaVerifier
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    getDocs, 
-    doc, 
-    getDoc,
+    getDatabase, 
+    ref, 
+    set, 
+    get, 
+    update, 
+    remove, 
+    push,
+    onValue,
     query,
-    where,
-    orderBy,
-    limit,
-    updateDoc,
-    deleteDoc,
-    onSnapshot
-} from "firebase/firestore";
+    orderByChild,
+    equalTo,
+    limitToFirst
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 import { 
     getStorage, 
-    ref, 
+    ref as storageRef, 
     uploadBytes, 
-    getDownloadURL 
-} from "firebase/storage";
+    getDownloadURL,
+    deleteObject 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBJ9mLHHQxnJKtixZrOYy_Vtf-TuwED2dE",
     authDomain: "trustsell-78c18.firebaseapp.com",
@@ -49,814 +50,784 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const database = getDatabase(app);
 const storage = getStorage(app);
 
 // Global State
 let currentUser = null;
+let listings = [];
 let categories = [];
 let locations = [];
 
-// Auth State Listener
-onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-    updateUIForAuthState();
+// DOM Content Loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupEventListeners();
+    checkAuthentication();
+    loadInitialData();
 });
 
-// Update UI based on auth state
-function updateUIForAuthState() {
-    const loginBtn = document.querySelector('.btn-login');
-    const accountLinks = document.querySelectorAll('a[href="account.html"]');
+// Initialize Application
+function initializeApp() {
+    console.log('TrustSell initialized');
     
-    if (currentUser) {
-        if (loginBtn) loginBtn.textContent = 'My Account';
-        accountLinks.forEach(link => {
-            link.href = 'account.html';
-            link.textContent = 'My Account';
-        });
-    } else {
-        if (loginBtn) loginBtn.textContent = 'Login';
-        accountLinks.forEach(link => {
-            link.href = 'login.html';
-            link.textContent = 'Login';
-        });
-    }
-}
-
-// Authentication Functions
-export async function loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    try {
-        const result = await signInWithPopup(auth, provider);
-        return result.user;
-    } catch (error) {
-        console.error('Google login error:', error);
-        throw error;
-    }
-}
-
-export async function loginWithFacebook() {
-    const provider = new FacebookAuthProvider();
-    try {
-        const result = await signInWithPopup(auth, provider);
-        return result.user;
-    } catch (error) {
-        console.error('Facebook login error:', error);
-        throw error;
-    }
-}
-
-export async function loginWithEmail(email, password) {
-    try {
-        const result = await signInWithEmailAndPassword(auth, email, password);
-        return result.user;
-    } catch (error) {
-        console.error('Email login error:', error);
-        throw error;
-    }
-}
-
-export async function registerWithEmail(email, password, userData) {
-    try {
-        const result = await createUserWithEmailAndPassword(auth, email, password);
-        // Save additional user data to Firestore
-        await addDoc(collection(db, 'users'), {
-            uid: result.user.uid,
-            email: result.user.email,
-            ...userData,
-            createdAt: new Date()
-        });
-        return result.user;
-    } catch (error) {
-        console.error('Registration error:', error);
-        throw error;
-    }
-}
-
-export async function logout() {
-    try {
-        await signOut(auth);
-    } catch (error) {
-        console.error('Logout error:', error);
-        throw error;
-    }
-}
-
-// Ad Management Functions
-export async function createAd(adData) {
-    if (!currentUser) throw new Error('User must be logged in');
-    
-    try {
-        const docRef = await addDoc(collection(db, 'ads'), {
-            ...adData,
-            userId: currentUser.uid,
-            createdAt: new Date(),
-            status: 'active',
-            views: 0
-        });
-        return docRef.id;
-    } catch (error) {
-        console.error('Error creating ad:', error);
-        throw error;
-    }
-}
-
-export async function getAds(filters = {}, limitCount = 20) {
-    try {
-        let q = collection(db, 'ads');
-        
-        // Apply filters
-        const constraints = [];
-        if (filters.category) {
-            constraints.push(where('category', '==', filters.category));
-        }
-        if (filters.location) {
-            constraints.push(where('location.city', '==', filters.location));
-        }
-        if (filters.maxPrice) {
-            constraints.push(where('price', '<=', parseInt(filters.maxPrice)));
-        }
-        if (filters.minPrice) {
-            constraints.push(where('price', '>=', parseInt(filters.minPrice)));
-        }
-        
-        constraints.push(orderBy('createdAt', 'desc'));
-        constraints.push(limit(limitCount));
-        
-        q = query(q, ...constraints);
-        const querySnapshot = await getDocs(q);
-        
-        const ads = [];
-        querySnapshot.forEach((doc) => {
-            ads.push({ id: doc.id, ...doc.data() });
-        });
-        
-        return ads;
-    } catch (error) {
-        console.error('Error getting ads:', error);
-        throw error;
-    }
-}
-
-export async function getAdById(adId) {
-    try {
-        const docRef = doc(db, 'ads', adId);
-        const docSnap = await getDoc(docRef);
-        
-        if (docSnap.exists()) {
-            return { id: docSnap.id, ...docSnap.data() };
-        } else {
-            throw new Error('Ad not found');
-        }
-    } catch (error) {
-        console.error('Error getting ad:', error);
-        throw error;
-    }
-}
-
-export async function updateAd(adId, updates) {
-    try {
-        const docRef = doc(db, 'ads', adId);
-        await updateDoc(docRef, updates);
-    } catch (error) {
-        console.error('Error updating ad:', error);
-        throw error;
-    }
-}
-
-export async function deleteAd(adId) {
-    try {
-        await deleteDoc(doc(db, 'ads', adId));
-    } catch (error) {
-        console.error('Error deleting ad:', error);
-        throw error;
-    }
-}
-
-// Image Upload Function
-export async function uploadImage(file) {
-    if (!currentUser) throw new Error('User must be logged in');
-    
-    try {
-        const storageRef = ref(storage, `ads/${currentUser.uid}/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        return downloadURL;
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        throw error;
-    }
-}
-
-// Chat Functions
-export async function sendMessage(chatId, message) {
-    if (!currentUser) throw new Error('User must be logged in');
-    
-    try {
-        await addDoc(collection(db, 'chats', chatId, 'messages'), {
-            senderId: currentUser.uid,
-            message: message,
-            timestamp: new Date(),
-            read: false
-        });
-    } catch (error) {
-        console.error('Error sending message:', error);
-        throw error;
-    }
-}
-
-export async function getChats(userId) {
-    try {
-        const q = query(
-            collection(db, 'chats'),
-            where('participants', 'array-contains', userId)
-        );
-        const querySnapshot = await getDocs(q);
-        
-        const chats = [];
-        querySnapshot.forEach((doc) => {
-            chats.push({ id: doc.id, ...doc.data() });
-        });
-        
-        return chats;
-    } catch (error) {
-        console.error('Error getting chats:', error);
-        throw error;
-    }
-}
-
-// Search Functions
-export function performSearch(query, filters = {}) {
-    return getAds({ ...filters, search: query });
-}
-
-// Categories Data
-export const categoriesData = {
-    mobiles: {
-        name: 'Mobiles & Tablets',
-        subcategories: ['Smartphones', 'Tablets', 'Mobile Accessories', 'Wearables']
-    },
-    vehicles: {
-        name: 'Vehicles',
-        subcategories: ['Cars', 'Motorcycles', 'Auto Parts', 'Bicycles', 'Commercial Vehicles']
-    },
-    property: {
-        name: 'Property',
-        subcategories: ['Houses', 'Apartments', 'Plots', 'Commercial Property', 'Rooms']
-    },
-    electronics: {
-        name: 'Electronics & Home Appliances',
-        subcategories: ['Computers', 'TVs', 'Cameras', 'Kitchen Appliances', 'ACs']
-    },
-    jobs: {
-        name: 'Jobs',
-        subcategories: ['IT & Telecom', 'Sales & Marketing', 'Accounting', 'Engineering', 'Teaching']
-    },
-    services: {
-        name: 'Services',
-        subcategories: ['Home Services', 'Tuitions', 'Events', 'Repairs', 'Beauty']
-    }
-};
-
-// Locations Data
-export const locationsData = {
-    punjab: {
-        name: 'Punjab',
-        cities: ['Lahore', 'Faisalabad', 'Rawalpindi', 'Gujranwala', 'Multan', 'Sialkot', 'Bahawalpur', 'Sargodha']
-    },
-    sindh: {
-        name: 'Sindh',
-        cities: ['Karachi', 'Hyderabad', 'Sukkur', 'Larkana', 'Nawabshah']
-    },
-    kpk: {
-        name: 'Khyber Pakhtunkhwa',
-        cities: ['Peshawar', 'Abbottabad', 'Mardan', 'Swat', 'Kohat']
-    },
-    balochistan: {
-        name: 'Balochistan',
-        cities: ['Quetta', 'Gwadar', 'Turbat', 'Khuzdar']
-    },
-    islamabad: {
-        name: 'Islamabad',
-        cities: ['Islamabad']
-    }
-};
-
-// Utility Functions
-export function formatPrice(price) {
-    return 'PKR ' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-export function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-PK', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+    // Initialize analytics
+    logAnalyticsEvent('page_view', {
+        page_title: document.title,
+        page_location: window.location.href
     });
 }
 
-export function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+// Setup Event Listeners
+function setupEventListeners() {
+    // Search functionality
+    const searchInputs = document.querySelectorAll('#searchInput, .search-input');
+    searchInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch(this.value);
+            }
+        });
+    });
+
+    const searchButtons = document.querySelectorAll('.search-btn');
+    searchButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const searchInput = this.closest('.search-bar')?.querySelector('input') || 
+                              document.querySelector('#searchInput');
+            if (searchInput) {
+                performSearch(searchInput.value);
+            }
+        });
+    });
+
+    // Bottom navigation active state
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href === currentPage) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+
+    // Category selection
+    const categoryItems = document.querySelectorAll('.category-item, .category-card');
+    categoryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const categoryName = this.querySelector('.category-name')?.textContent || 
+                               this.textContent.trim();
+            selectCategory(categoryName);
+        });
+    });
+
+    // FAQ functionality
+    setupFAQ();
+
+    // Login form handlers
+    setupLoginForms();
+
+    // Chat and message functionality
+    setupChat();
+
+    // Listing interactions
+    setupListings();
+
+    // Filter functionality
+    setupFilters();
+}
+
+// Authentication Functions
+function checkAuthentication() {
+    auth.onAuthStateChanged((user) => {
+        currentUser = user;
+        updateUIForAuthState(user);
+        
+        if (user) {
+            logAnalyticsEvent('login', {
+                method: user.providerData[0]?.providerId || 'email'
+            });
+        }
+    });
+}
+
+function updateUIForAuthState(user) {
+    const loginButtons = document.querySelectorAll('a[href="login.html"]');
+    const accountElements = document.querySelectorAll('.account-specific');
+    
+    if (user) {
+        // User is logged in
+        loginButtons.forEach(btn => {
+            btn.style.display = 'none';
+        });
+        accountElements.forEach(el => {
+            el.style.display = 'block';
+        });
+        
+        // Update user info in account page
+        updateUserProfile(user);
+    } else {
+        // User is logged out
+        loginButtons.forEach(btn => {
+            btn.style.display = 'block';
+        });
+        accountElements.forEach(el => {
+            el.style.display = 'none';
+        });
+    }
+}
+
+function updateUserProfile(user) {
+    const profileName = document.querySelector('.profile-info h3');
+    const profileAvatar = document.querySelector('.profile-avatar');
+    
+    if (profileName && user.displayName) {
+        profileName.textContent = user.displayName;
+    }
+    
+    if (profileAvatar && user.displayName) {
+        const initials = user.displayName.split(' ').map(n => n[0]).join('').toUpperCase();
+        profileAvatar.textContent = initials;
+    }
+}
+
+// Login Form Handlers
+function setupLoginForms() {
+    // Email login form
+    const emailForm = document.getElementById('emailForm');
+    if (emailForm) {
+        emailForm.addEventListener('submit', handleEmailLogin);
+    }
+
+    // Phone login form
+    const phoneForm = document.getElementById('phoneForm');
+    if (phoneForm) {
+        phoneForm.addEventListener('submit', handlePhoneLogin);
+    }
+
+    // Social login buttons
+    const googleLoginBtn = document.querySelector('.google-login');
+    if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', handleGoogleLogin);
+    }
+
+    const facebookLoginBtn = document.querySelector('.facebook-login');
+    if (facebookLoginBtn) {
+        facebookLoginBtn.addEventListener('click', handleFacebookLogin);
+    }
+
+    // Signup form
+    const signupForm = document.getElementById('signupFormElement');
+    if (signupForm) {
+        signupForm.addEventListener('submit', handleSignup);
+    }
+}
+
+async function handleEmailLogin(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('User logged in:', userCredential.user);
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Login error:', error);
+        showNotification(error.message, 'error');
+    }
+}
+
+async function handleGoogleLogin() {
+    const provider = new GoogleAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+        console.log('Google login successful:', result.user);
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Google login error:', error);
+        showNotification(error.message, 'error');
+    }
+}
+
+async function handleFacebookLogin() {
+    const provider = new FacebookAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+        console.log('Facebook login successful:', result.user);
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Facebook login error:', error);
+        showNotification(error.message, 'error');
+    }
+}
+
+async function handlePhoneLogin(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const phoneNumber = formData.get('phone');
+
+    // Note: Phone authentication requires additional setup with Recaptcha
+    showNotification('Phone authentication requires additional configuration', 'info');
+}
+
+async function handleSignup(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const password = formData.get('password');
+
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Update profile with display name
+        await updateProfile(user, { displayName: name });
+        
+        // Save additional user data to database
+        await set(ref(database, 'users/' + user.uid), {
+            name: name,
+            email: email,
+            phone: phone,
+            createdAt: new Date().toISOString(),
+            verified: false
+        });
+
+        console.log('User created:', user);
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Signup error:', error);
+        showNotification(error.message, 'error');
+    }
+}
+
+// Data Loading Functions
+async function loadInitialData() {
+    await loadCategories();
+    await loadLocations();
+    await loadFeaturedListings();
+}
+
+async function loadCategories() {
+    try {
+        const categoriesRef = ref(database, 'categories');
+        const snapshot = await get(categoriesRef);
+        
+        if (snapshot.exists()) {
+            categories = snapshot.val();
+        } else {
+            // Load default categories if none exist
+            await initializeDefaultCategories();
+        }
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
+async function initializeDefaultCategories() {
+    const defaultCategories = {
+        'mobiles': {
+            name: 'Mobiles',
+            subcategories: {
+                'smartphones': 'Smartphones',
+                'feature-phones': 'Feature Phones',
+                'tablets': 'Tablets',
+                'smartwatches': 'Smartwatches',
+                'accessories': 'Accessories'
+            }
+        },
+        'vehicles': {
+            name: 'Vehicles',
+            subcategories: {
+                'cars': 'Cars',
+                'bikes': 'Bikes',
+                'rickshaws': 'Rickshaws',
+                'commercial': 'Commercial Vehicles',
+                'spare-parts': 'Spare Parts',
+                'tyres-rims': 'Tyres & Rims'
+            }
+        }
+        // Add more default categories as needed
     };
+
+    try {
+        await set(ref(database, 'categories'), defaultCategories);
+        categories = defaultCategories;
+    } catch (error) {
+        console.error('Error initializing categories:', error);
+    }
 }
 
-// DOM Content Loaded Event Listeners
-document.addEventListener('DOMContentLoaded', function() {
-    initializePage();
-});
-
-async function initializePage() {
-    const path = window.location.pathname;
-    const page = path.split('/').pop() || 'index.html';
-    
+async function loadLocations() {
     try {
-        switch(page) {
-            case 'index.html':
-                await loadFeaturedAds();
-                break;
-            case 'sell.html':
-                initializeSellPage();
-                break;
-            case 'login.html':
-                initializeLoginPage();
-                break;
-            case 'search-results.html':
-                initializeSearchPage();
-                break;
-            case 'chat.html':
-                initializeChatPage();
-                break;
-            case 'account.html':
-                initializeAccountPage();
-                break;
-            case 'my-ads.html':
-                initializeMyAdsPage();
-                break;
-            case 'listing.html':
-                initializeListingPage();
-                break;
+        const locationsRef = ref(database, 'locations');
+        const snapshot = await get(locationsRef);
+        
+        if (snapshot.exists()) {
+            locations = snapshot.val();
+        } else {
+            await initializeDefaultLocations();
         }
     } catch (error) {
-        console.error('Error initializing page:', error);
+        console.error('Error loading locations:', error);
     }
 }
 
-// Page-specific Initialization Functions
-async function loadFeaturedAds() {
-    const featuredAdsContainer = document.getElementById('featuredAds');
-    if (!featuredAdsContainer) return;
-    
-    try {
-        const ads = await getAds({}, 8);
-        featuredAdsContainer.innerHTML = ads.map(ad => `
-            <div class="ad-card" onclick="window.location.href='listing.html?id=${ad.id}'">
-                <img src="${ad.images?.[0] || '/placeholder.jpg'}" alt="${ad.title}" class="ad-image">
-                <div class="ad-details">
-                    <div class="ad-price">${formatPrice(ad.price)}</div>
-                    <h3 class="ad-title">${ad.title}</h3>
-                    <div class="ad-location">${ad.location?.city || 'Unknown'}</div>
-                    <div class="ad-date">${formatDate(ad.createdAt)}</div>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        featuredAdsContainer.innerHTML = '<p>Error loading featured ads</p>';
-    }
-}
-
-function initializeSellPage() {
-    const categorySelect = document.getElementById('mainCategory');
-    const subCategorySelect = document.getElementById('subCategory');
-    const provinceSelect = document.getElementById('province');
-    const citySelect = document.getElementById('city');
-    const uploadArea = document.getElementById('uploadArea');
-    const imagePreview = document.getElementById('imagePreview');
-    const adForm = document.getElementById('adForm');
-    
-    let uploadedImages = [];
-    
-    // Category change handler
-    if (categorySelect) {
-        categorySelect.addEventListener('change', function() {
-            const category = this.value;
-            subCategorySelect.innerHTML = '<option value="">Select Sub Category</option>';
-            
-            if (category && categoriesData[category]) {
-                categoriesData[category].subcategories.forEach(sub => {
-                    const option = document.createElement('option');
-                    option.value = sub.toLowerCase();
-                    option.textContent = sub;
-                    subCategorySelect.appendChild(option);
-                });
-            }
-        });
-    }
-    
-    // Province change handler
-    if (provinceSelect) {
-        provinceSelect.addEventListener('change', function() {
-            const province = this.value;
-            citySelect.innerHTML = '<option value="">Select City</option>';
-            
-            if (province && locationsData[province]) {
-                locationsData[province].cities.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city.toLowerCase();
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
-        });
-    }
-    
-    // Image upload handler
-    if (uploadArea) {
-        uploadArea.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.multiple = true;
-            input.onchange = handleImageUpload;
-            input.click();
-        });
-        
-        function handleImageUpload(e) {
-            const files = Array.from(e.target.files);
-            files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB');
-                    return;
+async function initializeDefaultLocations() {
+    const defaultLocations = {
+        'punjab': {
+            name: 'Punjab',
+            cities: {
+                'lahore': {
+                    name: 'Lahore',
+                    areas: ['Model Town', 'Johar Town', 'Gulberg', 'Bahria Town', 'DHA', 'Cantt']
+                },
+                'faisalabad': {
+                    name: 'Faisalabad',
+                    areas: ['Civic Center', 'Madina Town', 'Jinnah Colony']
                 }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    uploadedImages.push({
-                        file: file,
-                        preview: e.target.result
-                    });
-                    updateImagePreview();
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        function updateImagePreview() {
-            imagePreview.innerHTML = uploadedImages.map((img, index) => `
-                <div class="preview-item">
-                    <img src="${img.preview}" alt="Preview" class="preview-image">
-                    <button type="button" onclick="removeImage(${index})">×</button>
-                </div>
-            `).join('');
-        }
-        
-        window.removeImage = (index) => {
-            uploadedImages.splice(index, 1);
-            updateImagePreview();
-        };
-    }
-    
-    // Form submission
-    if (adForm) {
-        adForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                alert('Please login to post an ad');
-                window.location.href = 'login.html';
-                return;
             }
-            
-            try {
-                // Upload images first
-                const imageUrls = [];
-                for (const img of uploadedImages) {
-                    const url = await uploadImage(img.file);
-                    imageUrls.push(url);
+        },
+        'sindh': {
+            name: 'Sindh',
+            cities: {
+                'karachi': {
+                    name: 'Karachi',
+                    areas: ['DHA', 'Clifton', 'Gulshan-e-Iqbal', 'North Nazimabad', 'Saddar']
                 }
-                
-                const adData = {
-                    title: document.getElementById('adTitle').value,
-                    description: document.getElementById('adDescription').value,
-                    price: parseInt(document.getElementById('adPrice').value),
-                    category: document.getElementById('mainCategory').value,
-                    subCategory: document.getElementById('subCategory').value,
-                    location: {
-                        province: document.getElementById('province').value,
-                        city: document.getElementById('city').value,
-                        area: document.getElementById('area').value
-                    },
-                    images: imageUrls,
-                    condition: 'used' // Default for now
-                };
-                
-                const adId = await createAd(adData);
-                alert('Ad posted successfully!');
-                window.location.href = `listing.html?id=${adId}`;
-                
-            } catch (error) {
-                console.error('Error posting ad:', error);
-                alert('Error posting ad. Please try again.');
             }
-        });
+        }
+        // Add more locations as needed
+    };
+
+    try {
+        await set(ref(database, 'locations'), defaultLocations);
+        locations = defaultLocations;
+    } catch (error) {
+        console.error('Error initializing locations:', error);
     }
 }
 
-function initializeLoginPage() {
-    const googleBtn = document.getElementById('googleLogin');
-    const facebookBtn = document.getElementById('facebookLogin');
-    const loginForm = document.getElementById('loginForm');
-    
-    if (googleBtn) {
-        googleBtn.addEventListener('click', async () => {
-            try {
-                await loginWithGoogle();
-                window.location.href = 'index.html';
-            } catch (error) {
-                alert('Google login failed. Please try again.');
-            }
-        });
+async function loadFeaturedListings() {
+    try {
+        const listingsRef = query(
+            ref(database, 'listings'),
+            orderByChild('featured'),
+            equalTo(true),
+            limitToFirst(20)
+        );
+        
+        const snapshot = await get(listingsRef);
+        if (snapshot.exists()) {
+            listings = snapshot.val();
+            displayListings(listings, 'featuredListings');
+        } else {
+            // Show placeholder or load recent listings
+            await loadRecentListings();
+        }
+    } catch (error) {
+        console.error('Error loading featured listings:', error);
     }
-    
-    if (facebookBtn) {
-        facebookBtn.addEventListener('click', async () => {
-            try {
-                await loginWithFacebook();
-                window.location.href = 'index.html';
-            } catch (error) {
-                alert('Facebook login failed. Please try again.');
-            }
-        });
+}
+
+async function loadRecentListings() {
+    try {
+        const listingsRef = query(
+            ref(database, 'listings'),
+            orderByChild('createdAt'),
+            limitToFirst(20)
+        );
+        
+        const snapshot = await get(listingsRef);
+        if (snapshot.exists()) {
+            listings = snapshot.val();
+            displayListings(listings, 'featuredListings');
+        }
+    } catch (error) {
+        console.error('Error loading recent listings:', error);
     }
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+}
+
+// Display Functions
+function displayListings(listingsData, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    Object.entries(listingsData).forEach(([id, listing]) => {
+        const listingElement = createListingElement(listing, id);
+        container.appendChild(listingElement);
+    });
+}
+
+function createListingElement(listing, id) {
+    const div = document.createElement('div');
+    div.className = 'listing-card';
+    div.innerHTML = `
+        <img src="${listing.images?.[0] || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxpc3RpbmcgSW1hZ2U8L3RleHQ+PC9zdmc+'}" 
+             alt="${listing.title}" class="listing-image">
+        <div class="listing-info">
+            <h3 class="listing-title">${listing.title}</h3>
+            <div class="listing-price">Rs ${formatPrice(listing.price)}</div>
+            <div class="listing-meta">
+                <span>${listing.location}</span>
+                <span>${formatTime(listing.createdAt)}</span>
+            </div>
+        </div>
+    `;
+
+    div.addEventListener('click', () => {
+        viewListing(id);
+    });
+
+    return div;
+}
+
+// Search Functionality
+function performSearch(query) {
+    if (!query.trim()) return;
+
+    logAnalyticsEvent('search', {
+        search_term: query
+    });
+
+    // For now, redirect to search results page
+    window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
+}
+
+// Category Selection
+function selectCategory(categoryName) {
+    logAnalyticsEvent('select_category', {
+        category_name: categoryName
+    });
+
+    // For now, redirect to search results filtered by category
+    window.location.href = `search-results.html?category=${encodeURIComponent(categoryName)}`;
+}
+
+// FAQ Functionality
+function setupFAQ() {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const faqItem = this.parentElement;
+            const isActive = faqItem.classList.contains('active');
             
-            try {
-                await loginWithEmail(email, password);
-                window.location.href = 'index.html';
-            } catch (error) {
-                alert('Login failed. Please check your credentials.');
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
             }
         });
-    }
-}
+    });
 
-function initializeSearchPage() {
-    const searchInput = document.getElementById('searchInput');
-    const categoryFilter = document.getElementById('categoryFilter');
-    const minPrice = document.getElementById('minPrice');
-    const maxPrice = document.getElementById('maxPrice');
-    const cityFilter = document.getElementById('cityFilter');
-    const applyFiltersBtn = document.getElementById('applyFilters');
-    const searchResults = document.getElementById('searchResults');
-    
-    // Populate category filter
-    if (categoryFilter) {
-        Object.entries(categoriesData).forEach(([key, category]) => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = category.name;
-            categoryFilter.appendChild(option);
-        });
-    }
-    
-    // Populate city filter
-    if (cityFilter) {
-        Object.values(locationsData).forEach(province => {
-            province.cities.forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                cityFilter.appendChild(option);
+    // Category tabs
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            
+            // Update active tab
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding content
+            document.querySelectorAll('.faq-category-content').forEach(content => {
+                content.classList.remove('active');
             });
+            document.getElementById(`${category}-faq`).classList.add('active');
+        });
+    });
+}
+
+// Chat Functionality
+function setupChat() {
+    // Chat tabs
+    const chatTabs = document.querySelectorAll('.chat-tabs .tab, .inbox-tabs .tab');
+    chatTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabType = this.getAttribute('data-tab');
+            
+            // Update active tab
+            this.parentElement.querySelectorAll('.tab').forEach(t => {
+                t.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // Filter chat/messages based on tab
+            filterChats(tabType);
+        });
+    });
+
+    // Chat filters
+    const chatFilters = document.querySelectorAll('.chat-filters .filter-btn');
+    chatFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            chatFilters.forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filterType = this.textContent.toLowerCase();
+            filterChatsByStatus(filterType);
+        });
+    });
+}
+
+function filterChats(tabType) {
+    const chatItems = document.querySelectorAll('.chat-item, .message-item');
+    
+    chatItems.forEach(item => {
+        switch(tabType) {
+            case 'all':
+                item.style.display = 'flex';
+                break;
+            case 'buying':
+            case 'selling':
+            case 'unread':
+            case 'important':
+                // Implement actual filtering logic based on data attributes
+                const itemType = item.getAttribute('data-type');
+                if (itemType === tabType) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+                break;
+        }
+    });
+}
+
+function filterChatsByStatus(status) {
+    // Implement status-based filtering
+    console.log('Filtering by status:', status);
+}
+
+// Listing Interactions
+function setupListings() {
+    // Favorite functionality
+    const favoriteBtns = document.querySelectorAll('.favorite-btn');
+    favoriteBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleFavorite(this);
+        });
+    });
+
+    // Share functionality
+    const shareBtns = document.querySelectorAll('.share-btn');
+    shareBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            shareListing(this);
+        });
+    });
+}
+
+function toggleFavorite(button) {
+    const isFavorited = button.classList.contains('favorited');
+    
+    if (isFavorited) {
+        button.classList.remove('favorited');
+        button.textContent = '🤍';
+    } else {
+        button.classList.add('favorited');
+        button.textContent = '❤️';
+    }
+    
+    logAnalyticsEvent('toggle_favorite', {
+        listing_id: button.closest('.listing-card')?.getAttribute('data-id')
+    });
+}
+
+function shareListing(button) {
+    const listingElement = button.closest('.listing-detail') || button.closest('.listing-card');
+    const listingTitle = listingElement?.querySelector('h1, .listing-title')?.textContent;
+    const listingUrl = window.location.href;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: listingTitle,
+            url: listingUrl
+        });
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(listingUrl).then(() => {
+            showNotification('Link copied to clipboard!', 'success');
         });
     }
     
-    // Get URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchQuery = urlParams.get('q');
-    const locationQuery = urlParams.get('location');
+    logAnalyticsEvent('share_listing', {
+        listing_title: listingTitle
+    });
+}
+
+function viewListing(listingId) {
+    window.location.href = `listing.html?id=${listingId}`;
+}
+
+// Filter Functionality
+function setupFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filterValue = this.textContent.toLowerCase();
+            applyFilters(filterValue);
+        });
+    });
+
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const viewType = this.getAttribute('data-view');
+            toggleView(viewType);
+        });
+    });
+}
+
+function applyFilters(filterType) {
+    console.log('Applying filter:', filterType);
+    // Implement actual filtering logic based on the filter type
+}
+
+function toggleView(viewType) {
+    const resultsGrid = document.querySelector('.results-grid');
+    const viewButtons = document.querySelectorAll('.view-btn');
     
-    if (searchInput && searchQuery) {
-        searchInput.value = searchQuery;
-    }
+    viewButtons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
     
-    if (cityFilter && locationQuery) {
-        cityFilter.value = locationQuery;
-    }
-    
-    // Load search results
-    loadSearchResults();
-    
-    // Apply filters
-    if (applyFiltersBtn) {
-        applyFiltersBtn.addEventListener('click', loadSearchResults);
-    }
-    
-    // Debounced search
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(loadSearchResults, 500));
-    }
-    
-    async function loadSearchResults() {
-        const filters = {};
-        
-        if (categoryFilter && categoryFilter.value) {
-            filters.category = categoryFilter.value;
-        }
-        if (minPrice && minPrice.value) {
-            filters.minPrice = minPrice.value;
-        }
-        if (maxPrice && maxPrice.value) {
-            filters.maxPrice = maxPrice.value;
-        }
-        if (cityFilter && cityFilter.value) {
-            filters.location = cityFilter.value;
-        }
-        if (searchInput && searchInput.value) {
-            filters.search = searchInput.value;
-        }
-        
-        try {
-            const ads = await getAds(filters, 20);
-            displaySearchResults(ads);
-        } catch (error) {
-            console.error('Error loading search results:', error);
-        }
-    }
-    
-    function displaySearchResults(ads) {
-        if (!searchResults) return;
-        
-        if (ads.length === 0) {
-            searchResults.innerHTML = '<p>No listings found matching your criteria.</p>';
-            return;
-        }
-        
-        searchResults.innerHTML = ads.map(ad => `
-            <div class="ad-card" onclick="window.location.href='listing.html?id=${ad.id}'">
-                <img src="${ad.images?.[0] || '/placeholder.jpg'}" alt="${ad.title}" class="ad-image">
-                <div class="ad-details">
-                    <div class="ad-price">${formatPrice(ad.price)}</div>
-                    <h3 class="ad-title">${ad.title}</h3>
-                    <div class="ad-location">${ad.location?.city || 'Unknown'}</div>
-                    <div class="ad-date">${formatDate(ad.createdAt)}</div>
-                </div>
-            </div>
-        `).join('');
+    if (viewType === 'list') {
+        resultsGrid.classList.add('list-view');
+    } else {
+        resultsGrid.classList.remove('list-view');
     }
 }
 
-function initializeChatPage() {
-    // Chat functionality implementation
-    console.log('Chat page initialized');
+// Utility Functions
+function formatPrice(price) {
+    return new Intl.NumberFormat('en-PK').format(price);
 }
 
-function initializeAccountPage() {
-    if (!currentUser) {
-        window.location.href = 'login.html';
-        return;
+function formatTime(timestamp) {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffInHours = (now - time) / (1000 * 60 * 60);
+    
+    if (diffInHours < 1) {
+        return 'Just now';
+    } else if (diffInHours < 24) {
+        return `${Math.floor(diffInHours)} hours ago`;
+    } else {
+        return `${Math.floor(diffInHours / 24)} days ago`;
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        max-width: 300px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    
+    // Set background color based on type
+    const colors = {
+        success: '#28a745',
+        error: '#dc3545',
+        warning: '#ffc107',
+        info: '#0078d4'
+    };
+    notification.style.background = colors[type] || colors.info;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+function logAnalyticsEvent(eventName, parameters = {}) {
+    // Log to console in development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log(`Analytics Event: ${eventName}`, parameters);
     }
     
-    // Load user data and statistics
-    loadUserData();
+    // Send to Firebase Analytics
+    analytics.logEvent(eventName, parameters);
 }
 
-async function loadUserData() {
-    try {
-        const activeAds = await getAds({ userId: currentUser.uid });
-        document.getElementById('activeAds').textContent = activeAds.length;
-        // Load other user data...
-    } catch (error) {
-        console.error('Error loading user data:', error);
-    }
+// Login Page Specific Functions
+function showEmailLogin() {
+    document.getElementById('emailLoginForm').classList.remove('hidden');
+    document.querySelector('.login-card').classList.add('hidden');
 }
 
-function initializeMyAdsPage() {
-    if (!currentUser) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    loadUserAds();
+function hideEmailLogin() {
+    document.getElementById('emailLoginForm').classList.add('hidden');
+    document.querySelector('.login-card').classList.remove('hidden');
 }
 
-async function loadUserAds() {
-    try {
-        const ads = await getAds({ userId: currentUser.uid });
-        const adsList = document.getElementById('userAdsList');
-        
-        if (ads.length === 0) {
-            adsList.innerHTML = '<p>You have no active ads. <a href="sell.html">Post your first ad</a></p>';
-            return;
-        }
-        
-        adsList.innerHTML = ads.map(ad => `
-            <div class="user-ad-card">
-                <img src="${ad.images?.[0] || '/placeholder.jpg'}" alt="${ad.title}">
-                <div class="ad-info">
-                    <h4>${ad.title}</h4>
-                    <div class="ad-price">${formatPrice(ad.price)}</div>
-                    <div class="ad-stats">
-                        <span>Views: ${ad.views || 0}</span>
-                        <span>Status: ${ad.status}</span>
-                    </div>
-                </div>
-                <div class="ad-actions">
-                    <button onclick="editAd('${ad.id}')">Edit</button>
-                    <button onclick="deleteAd('${ad.id}')">Delete</button>
-                    <button onclick="promoteAd('${ad.id}')">Promote</button>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading user ads:', error);
-    }
+function showPhoneLogin() {
+    document.getElementById('phoneLoginForm').classList.remove('hidden');
+    document.querySelector('.login-card').classList.add('hidden');
 }
 
-function initializeListingPage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const adId = urlParams.get('id');
-    
-    if (adId) {
-        loadListing(adId);
-    }
+function hidePhoneLogin() {
+    document.getElementById('phoneLoginForm').classList.add('hidden');
+    document.querySelector('.login-card').classList.remove('hidden');
 }
 
-async function loadListing(adId) {
-    try {
-        const ad = await getAdById(adId);
-        displayListing(ad);
-    } catch (error) {
-        console.error('Error loading listing:', error);
-        document.querySelector('.listing-container').innerHTML = '<p>Listing not found.</p>';
-    }
+function showSignup() {
+    document.getElementById('signupForm').classList.remove('hidden');
+    document.querySelector('.login-card').classList.add('hidden');
 }
 
-function displayListing(ad) {
-    document.getElementById('listingTitle').textContent = ad.title;
-    document.getElementById('listingPrice').textContent = formatPrice(ad.price);
-    document.getElementById('listingDescription').textContent = ad.description;
-    document.getElementById('listingLocation').textContent = `${ad.location.area}, ${ad.location.city}`;
-    document.getElementById('listingDate').textContent = `Posted on ${formatDate(ad.createdAt)}`;
-    
-    // Set main image
-    const mainImage = document.getElementById('mainListingImage');
-    if (ad.images && ad.images.length > 0) {
-        mainImage.src = ad.images[0];
-        mainImage.alt = ad.title;
-    }
-    
-    // Set thumbnails
-    const thumbnails = document.getElementById('imageThumbnails');
-    if (ad.images && ad.images.length > 1) {
-        thumbnails.innerHTML = ad.images.map((img, index) => `
-            <img src="${img}" alt="${ad.title}" class="thumbnail ${index === 0 ? 'active' : ''}" 
-                 onclick="setMainImage('${img}', this)">
-        `).join('');
-    }
-    
-    // Update breadcrumb
-    document.getElementById('breadcrumbCategory').textContent = categoriesData[ad.category]?.name || 'Category';
-    document.getElementById('breadcrumbTitle').textContent = ad.title;
-    
-    // Increment view count
-    updateAd(ad.id, { views: (ad.views || 0) + 1 });
+function hideSignup() {
+    document.getElementById('signupForm').classList.add('hidden');
+    document.querySelector('.login-card').classList.remove('hidden');
 }
 
-window.setMainImage = function(src, element) {
-    document.getElementById('mainListingImage').src = src;
-    document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
-    element.classList.add('active');
-};
+// Export functions for global access
+window.showEmailLogin = showEmailLogin;
+window.hideEmailLogin = hideEmailLogin;
+window.showPhoneLogin = showPhoneLogin;
+window.hidePhoneLogin = hidePhoneLogin;
+window.showSignup = showSignup;
+window.hideSignup = hideSignup;
+window.selectCategory = selectCategory;
 
-// Export for global access
-window.trustsell = {
-    auth,
-    db,
-    storage,
-    currentUser,
-    loginWithGoogle,
-    loginWithFacebook,
-    loginWithEmail,
-    registerWithEmail,
-    logout,
-    createAd,
-    getAds,
-    getAdById,
-    updateAd,
-    deleteAd,
-    uploadImage,
-    formatPrice,
-    formatDate
-};
+// Service Worker Registration for PWA (Future Enhancement)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(function(error) {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+    });
+}
