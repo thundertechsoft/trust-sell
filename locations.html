@@ -3,53 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse TrustSell listings by location - All Pakistan provinces, cities and areas">
     <title>Locations - TrustSell Pakistan</title>
+    <meta name="description" content="Browse listings by location across Pakistan - Karachi, Lahore, Islamabad, and all major cities.">
     <link rel="stylesheet" href="css/trustsell.css">
-    <link rel="canonical" href="https://trustsell.pk/locations">
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">TrustSell</a>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>TrustSell</h1>
+                </div>
+                <div class="page-title">
+                    <h2>Locations</h2>
+                </div>
             </div>
-            <div class="nav-actions">
-                <a href="sell.html" class="btn-sell">SELL</a>
-            </div>
-        </nav>
+        </div>
     </header>
 
-    <main class="main locations-main">
-        <div class="locations-container">
-            <h2>Browse by Location</h2>
-            <p>Find listings in your city or area across Pakistan</p>
-            
-            <div class="locations-grid">
+    <main class="main-content">
+        <div class="container">
+            <div class="locations-search">
+                <input type="text" placeholder="Search cities or areas..." class="search-input" id="locationSearch">
+            </div>
+
+            <div class="locations-container">
+                <!-- Punjab -->
                 <div class="province-section">
-                    <h3>Punjab</h3>
-                    <div class="cities-list">
-                        <a href="search-results.html?location=lahore">Lahore</a>
-                        <a href="search-results.html?location=faisalabad">Faisalabad</a>
-                        <a href="search-results.html?location=rawalpindi">Rawalpindi</a>
-                        <!-- More cities -->
+                    <h3 class="province-header">🏛️ Punjab</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Lahore</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Model Town</a>
+                                <a href="#" class="area">Johar Town</a>
+                                <a href="#" class="area">Gulberg</a>
+                                <a href="#" class="area">Bahria Town</a>
+                                <a href="#" class="area">DHA</a>
+                                <a href="#" class="area">Cantt</a>
+                                <a href="#" class="area">Allama Iqbal Town</a>
+                                <a href="#" class="area">Wapda Town</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Faisalabad</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Civic Center</a>
+                                <a href="#" class="area">Madina Town</a>
+                                <a href="#" class="area">Jinnah Colony</a>
+                                <a href="#" class="area">Millat Town</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Rawalpindi</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Bahria Town</a>
+                                <a href="#" class="area">DHA</a>
+                                <a href="#" class="area">Satellite Town</a>
+                                <a href="#" class="area">Westridge</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Multan</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Bosan Road</a>
+                                <a href="#" class="area">Shah Rukn-e-Alam</a>
+                                <a href="#" class="area">Gulgasht</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Gujranwala</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">People's Colony</a>
+                                <a href="#" class="area">Model Town</a>
+                                <a href="#" class="area">Nandipura</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Sialkot</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Cantt</a>
+                                <a href="#" class="area">Model Town</a>
+                                <a href="#" class="area">Sambrial Road</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Bahawalpur</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Model Town</a>
+                                <a href="#" class="area">Cantt</a>
+                                <a href="#" class="area">Shahdara</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
+
+                <!-- Sindh -->
                 <div class="province-section">
-                    <h3>Sindh</h3>
-                    <div class="cities-list">
-                        <a href="search-results.html?location=karachi">Karachi</a>
-                        <a href="search-results.html?location=hyderabad">Hyderabad</a>
-                        <!-- More cities -->
+                    <h3 class="province-header">🏛️ Sindh</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Karachi</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">DHA</a>
+                                <a href="#" class="area">Clifton</a>
+                                <a href="#" class="area">Gulshan-e-Iqbal</a>
+                                <a href="#" class="area">North Nazimabad</a>
+                                <a href="#" class="area">Saddar</a>
+                                <a href="#" class="area">Korangi</a>
+                                <a href="#" class="area">Malir</a>
+                                <a href="#" class="area">Gulistan-e-Johar</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Hyderabad</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Latifabad</a>
+                                <a href="#" class="area">Qasimabad</a>
+                                <a href="#" class="area">Housing Society</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Sukkur</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Military Road</a>
+                                <a href="#" class="area">Shikarpur Road</a>
+                                <a href="#" class="area">Rohri</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- More provinces -->
+
+                <!-- Khyber Pakhtunkhwa -->
+                <div class="province-section">
+                    <h3 class="province-header">🏛️ Khyber Pakhtunkhwa</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Peshawar</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">University Town</a>
+                                <a href="#" class="area">Hayatabad</a>
+                                <a href="#" class="area">Cantt</a>
+                                <a href="#" class="area">Kohat Road</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Abbottabad</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Cantt</a>
+                                <a href="#" class="area">Jinnahabad</a>
+                                <a href="#" class="area">Mandian</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Mardan</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Gulabad</a>
+                                <a href="#" class="area">Sheikh Maltoon</a>
+                                <a href="#" class="area">Charsadda Road</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Balochistan -->
+                <div class="province-section">
+                    <h3 class="province-header">🏛️ Balochistan</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Quetta</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Cantt</a>
+                                <a href="#" class="area">Jinnah Town</a>
+                                <a href="#" class="area">Samungli Road</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Islamabad Capital Territory -->
+                <div class="province-section">
+                    <h3 class="province-header">🏛️ Islamabad Capital Territory</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Islamabad</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">F-6</a>
+                                <a href="#" class="area">F-7</a>
+                                <a href="#" class="area">F-8</a>
+                                <a href="#" class="area">G-9</a>
+                                <a href="#" class="area">G-10</a>
+                                <a href="#" class="area">G-11</a>
+                                <a href="#" class="area">I-8</a>
+                                <a href="#" class="area">I-10</a>
+                                <a href="#" class="area">Bahria Town</a>
+                                <a href="#" class="area">DHA</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gilgit-Baltistan -->
+                <div class="province-section">
+                    <h3 class="province-header">🏛️ Gilgit-Baltistan</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Gilgit</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Jutial</a>
+                                <a href="#" class="area">Kashrot</a>
+                                <a href="#" class="area">Nagar</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Skardu</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Kachura</a>
+                                <a href="#" class="area">Satpara</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Azad Jammu & Kashmir -->
+                <div class="province-section">
+                    <h3 class="province-header">🏛️ Azad Jammu & Kashmir</h3>
+                    <div class="cities-grid">
+                        <div class="city-card">
+                            <h4>Muzaffarabad</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">Chakswari</a>
+                                <a href="#" class="area">Hattian</a>
+                            </div>
+                        </div>
+                        <div class="city-card">
+                            <h4>Mirpur</h4>
+                            <div class="areas-list">
+                                <a href="#" class="area">New Mirpur</a>
+                                <a href="#" class="area">Islamgarh</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <script type="module" src="js/trustsell.js"></script>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="chat.html" class="nav-item">
+            <span>💬</span>
+            <span>Chat</span>
+        </a>
+        <a href="sell.html" class="nav-item">
+            <span>➕</span>
+            <span>Sell</span>
+        </a>
+        <a href="my-ads.html" class="nav-item">
+            <span>📰</span>
+            <span>My Ads</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>👤</span>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <script src="js/trustsell.js"></script>
 </body>
 </html>
