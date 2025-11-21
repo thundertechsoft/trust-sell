@@ -3,65 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Chat with buyers and sellers on TrustSell - Secure messaging for classified transactions">
-    <title>Chat - TrustSell Messaging</title>
+    <title>Chat - TrustSell</title>
+    <meta name="description" content="Chat with buyers and sellers securely on TrustSell.">
     <link rel="stylesheet" href="css/trustsell.css">
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">TrustSell</a>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>TrustSell</h1>
+                </div>
+                <div class="page-title">
+                    <h2>Chat</h2>
+                </div>
             </div>
-            <div class="nav-actions">
-                <a href="inbox.html" class="btn-secondary">Inbox</a>
-            </div>
-        </nav>
+        </div>
     </header>
 
-    <main class="main chat-main">
-        <div class="chat-container">
-            <div class="chat-sidebar">
-                <div class="chat-header">
-                    <h3>Messages</h3>
-                    <div class="chat-filters">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="buying">Buying</button>
-                        <button class="filter-btn" data-filter="selling">Selling</button>
-                    </div>
-                </div>
-                <div class="chat-list" id="chatList">
-                    <!-- Chat conversations will be loaded here -->
-                </div>
+    <main class="main-content">
+        <div class="container">
+            <div class="chat-tabs">
+                <button class="tab active" data-tab="all">All</button>
+                <button class="tab" data-tab="buying">Buying</button>
+                <button class="tab" data-tab="selling">Selling</button>
             </div>
-            
-            <div class="chat-window">
-                <div class="chat-window-header">
-                    <div class="chat-partner-info">
-                        <img src="" alt="" class="partner-avatar" id="partnerAvatar">
-                        <div class="partner-details">
-                            <h4 id="partnerName">Select a conversation</h4>
-                            <span id="partnerStatus">Online</span>
+
+            <div class="chat-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Unread</button>
+                <button class="filter-btn">Important</button>
+            </div>
+
+            <div class="chat-list">
+                <div class="chat-item unread">
+                    <div class="chat-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNmMGYwZjAiLz48dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QS</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Ali Ahmed</span>
+                            <span class="chat-time">2 min ago</span>
                         </div>
+                        <div class="chat-preview">Is this item still available?</div>
+                        <span class="ad-status active">Active</span>
                     </div>
+                    <div class="unread-badge">1</div>
                 </div>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="no-chat-selected">
-                        <p>Select a conversation to start messaging</p>
-                    </div>
-                </div>
-                
-                <div class="chat-input-container">
-                    <div class="chat-input">
-                        <input type="text" placeholder="Type your message..." id="messageInput" disabled>
-                        <button id="sendMessage" disabled>Send</button>
+
+                <div class="chat-item">
+                    <div class="chat-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNmMGYwZjAiLz48dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Qw==</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Sara Khan</span>
+                            <span class="chat-time">1 hour ago</span>
+                        </div>
+                        <div class="chat-preview">Can you do 15,000?</div>
+                        <span class="ad-status sold">Sold</span>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script type="module" src="js/trustsell.js"></script>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="chat.html" class="nav-item active">
+            <span>💬</span>
+            <span>Chat</span>
+        </a>
+        <a href="sell.html" class="nav-item">
+            <span>➕</span>
+            <span>Sell</span>
+        </a>
+        <a href="my-ads.html" class="nav-item">
+            <span>📰</span>
+            <span>My Ads</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>👤</span>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <script src="js/trustsell.js"></script>
 </body>
 </html>
