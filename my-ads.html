@@ -3,39 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Manage your TrustSell ads - Edit, promote and track performance of your listings">
     <title>My Ads - TrustSell</title>
+    <meta name="description" content="Manage your TrustSell listings - view, edit, promote and track performance of your ads.">
     <link rel="stylesheet" href="css/trustsell.css">
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">TrustSell</a>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>TrustSell</h1>
+                </div>
+                <div class="page-title">
+                    <h2>My Ads</h2>
+                </div>
             </div>
-            <div class="nav-actions">
-                <a href="sell.html" class="btn-primary">Post New Ad</a>
-            </div>
-        </nav>
+        </div>
     </header>
 
-    <main class="main myads-main">
-        <div class="myads-container">
-            <h2>My Ads</h2>
-            
-            <div class="ads-tabs">
-                <button class="tab-btn active" data-status="active">Active</button>
-                <button class="tab-btn" data-status="pending">Pending</button>
-                <button class="tab-btn" data-status="sold">Sold</button>
-                <button class="tab-btn" data-status="expired">Expired</button>
+    <main class="main-content">
+        <div class="container">
+            <div class="ads-stats">
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Total Ads</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">Active</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">245</span>
+                    <span class="stat-label">Views</span>
+                </div>
             </div>
-            
-            <div class="ads-list" id="userAdsList">
-                <!-- User's ads will be loaded here -->
+
+            <div class="ads-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Under Review</button>
+                <button class="filter-btn">Live</button>
+                <button class="filter-btn">Inactive</button>
+                <button class="filter-btn">Sold</button>
+            </div>
+
+            <div class="ads-list">
+                <div class="ad-item">
+                    <div class="ad-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5pUGhvbmU8L3RleHQ+PC9zdmc+" alt="iPhone 14 Pro">
+                    </div>
+                    <div class="ad-details">
+                        <h4 class="ad-title">iPhone 14 Pro 256GB - Like New</h4>
+                        <div class="ad-meta">
+                            <span class="ad-price">Rs 280,000</span>
+                            <span class="ad-location">Lahore</span>
+                            <span class="ad-time">2 days ago</span>
+                        </div>
+                        <div class="ad-stats">
+                            <span class="stat">👁️ 45 views</span>
+                            <span class="stat">💬 8 chats</span>
+                        </div>
+                        <div class="ad-status live">Live</div>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="action-btn edit">Edit</button>
+                        <button class="action-btn promote">Promote</button>
+                        <button class="action-btn delete">Delete</button>
+                    </div>
+                </div>
+
+                <div class="ad-item">
+                    <div class="ad-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Ib25kYTwvdGV4dD48L3N2Zz4=" alt="Honda Civic">
+                    </div>
+                    <div class="ad-details">
+                        <h4 class="ad-title">Honda Civic 2020 Oriel - Excellent Condition</h4>
+                        <div class="ad-meta">
+                            <span class="ad-price">Rs 3,200,000</span>
+                            <span class="ad-location">Karachi</span>
+                            <span class="ad-time">1 week ago</span>
+                        </div>
+                        <div class="ad-stats">
+                            <span class="stat">👁️ 128 views</span>
+                            <span class="stat">💬 15 chats</span>
+                        </div>
+                        <div class="ad-status under-review">Under Review</div>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="action-btn edit">Edit</button>
+                        <button class="action-btn promote">Promote</button>
+                        <button class="action-btn delete">Delete</button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <script type="module" src="js/trustsell.js"></script>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="chat.html" class="nav-item">
+            <span>💬</span>
+            <span>Chat</span>
+        </a>
+        <a href="sell.html" class="nav-item">
+            <span>➕</span>
+            <span>Sell</span>
+        </a>
+        <a href="my-ads.html" class="nav-item active">
+            <span>📰</span>
+            <span>My Ads</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>👤</span>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <script src="js/trustsell.js"></script>
 </body>
 </html>
