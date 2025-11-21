@@ -3,113 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sell your items on TrustSell - Post ads for mobiles, vehicles, property, jobs and more in Pakistan">
-    <title>Sell on TrustSell - Post Free Classified Ads</title>
+    <title>Sell on TrustSell - Post Your Ad</title>
+    <meta name="description" content="Sell your items quickly on TrustSell. Post ads for mobiles, vehicles, property, electronics and more in Pakistan.">
     <link rel="stylesheet" href="css/trustsell.css">
-    <link rel="canonical" href="https://trustsell.pk/sell">
 </head>
 <body>
     <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">TrustSell</a>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>TrustSell</h1>
+                </div>
+                <div class="page-title">
+                    <h2>Sell</h2>
+                </div>
             </div>
-            <div class="nav-actions">
-                <a href="account.html" class="btn-secondary">My Account</a>
-            </div>
-        </nav>
+        </div>
     </header>
 
-    <main class="main sell-main">
-        <div class="sell-container">
-            <h2>Sell Your Item</h2>
-            
-            <section class="quick-categories">
+    <main class="main-content">
+        <div class="container">
+            <section class="popular-categories-section">
                 <h3>Popular Categories</h3>
-                <div class="category-grid">
-                    <!-- Same categories as index but with sell links -->
+                <div class="category-list">
+                    <div class="category-item" onclick="selectCategory('mobiles')">
+                        <div class="category-icon">📱</div>
+                        <div class="category-info">
+                            <span class="category-name">Mobiles</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('vehicles')">
+                        <div class="category-icon">🚗</div>
+                        <div class="category-info">
+                            <span class="category-name">Vehicles</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('property-sale')">
+                        <div class="category-icon">🏠</div>
+                        <div class="category-info">
+                            <span class="category-name">Property for Sale</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('property-rent')">
+                        <div class="category-icon">🏡</div>
+                        <div class="category-info">
+                            <span class="category-name">Property for Rent</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <form class="ad-form" id="adForm">
-                <div class="form-section">
-                    <h4>Category</h4>
-                    <div class="form-group">
-                        <select id="mainCategory" required>
-                            <option value="">Select Main Category</option>
-                            <option value="mobiles">Mobiles</option>
-                            <option value="vehicles">Vehicles</option>
-                            <option value="property">Property</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="jobs">Jobs</option>
-                            <option value="services">Services</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select id="subCategory" required>
-                            <option value="">Select Sub Category</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h4>Ad Details</h4>
-                    <div class="form-group">
-                        <label for="adTitle">Ad Title *</label>
-                        <input type="text" id="adTitle" required maxlength="70">
-                        <small>Maximum 70 characters</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="adDescription">Description *</label>
-                        <textarea id="adDescription" rows="5" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="adPrice">Price (PKR) *</label>
-                        <input type="number" id="adPrice" required>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h4>Upload Images</h4>
-                    <div class="image-upload">
-                        <div class="upload-area" id="uploadArea">
-                            <span>Click to upload images</span>
-                            <small>Maximum 10 images, 5MB each</small>
+            <section class="all-categories-section">
+                <h3>All Categories</h3>
+                <div class="category-list">
+                    <div class="category-item" onclick="selectCategory('electronics')">
+                        <div class="category-icon">📺</div>
+                        <div class="category-info">
+                            <span class="category-name">Electronics & Home Appliances</span>
+                            <span class="category-chevron">›</span>
                         </div>
-                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('bikes')">
+                        <div class="category-icon">🏍️</div>
+                        <div class="category-info">
+                            <span class="category-name">Bikes</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('business')">
+                        <div class="category-icon">🏢</div>
+                        <div class="category-info">
+                            <span class="category-name">Business, Industrial & Agriculture</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('services')">
+                        <div class="category-icon">🔧</div>
+                        <div class="category-info">
+                            <span class="category-name">Services</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('jobs')">
+                        <div class="category-icon">💼</div>
+                        <div class="category-info">
+                            <span class="category-name">Jobs</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('animals')">
+                        <div class="category-icon">🐕</div>
+                        <div class="category-info">
+                            <span class="category-name">Animals</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('fashion')">
+                        <div class="category-icon">👕</div>
+                        <div class="category-info">
+                            <span class="category-name">Fashion & Beauty</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('furniture')">
+                        <div class="category-icon">🛋️</div>
+                        <div class="category-info">
+                            <span class="category-name">Furniture & Home</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('computers')">
+                        <div class="category-icon">💻</div>
+                        <div class="category-info">
+                            <span class="category-name">Computers & IT</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('books')">
+                        <div class="category-icon">📚</div>
+                        <div class="category-info">
+                            <span class="category-name">Books & Stationery</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('kids')">
+                        <div class="category-icon">🧸</div>
+                        <div class="category-info">
+                            <span class="category-name">Kids & Toys</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('sports')">
+                        <div class="category-icon">⚽</div>
+                        <div class="category-info">
+                            <span class="category-name">Sports & Outdoors</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('home-garden')">
+                        <div class="category-icon">🌿</div>
+                        <div class="category-info">
+                            <span class="category-name">Home & Garden</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('photography')">
+                        <div class="category-icon">📷</div>
+                        <div class="category-info">
+                            <span class="category-name">Photography & Media</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('hobbies')">
+                        <div class="category-icon">🎵</div>
+                        <div class="category-info">
+                            <span class="category-name">Hobbies & Music</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('health')">
+                        <div class="category-icon">💊</div>
+                        <div class="category-info">
+                            <span class="category-name">Health & Wellness</span>
+                            <span class="category-chevron">›</span>
+                        </div>
+                    </div>
+                    <div class="category-item" onclick="selectCategory('local-services')">
+                        <div class="category-icon">⚖️</div>
+                        <div class="category-info">
+                            <span class="category-name">Local Services</span>
+                            <span class="category-chevron">›</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-section">
-                    <h4>Location</h4>
-                    <div class="form-group">
-                        <select id="province" required>
-                            <option value="">Select Province</option>
-                            <option value="punjab">Punjab</option>
-                            <option value="sindh">Sindh</option>
-                            <option value="kpk">Khyber Pakhtunkhwa</option>
-                            <option value="balochistan">Balochistan</option>
-                            <option value="islamabad">Islamabad</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select id="city" required>
-                            <option value="">Select City</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="area" placeholder="Area/Location" required>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" id="previewBtn">Preview</button>
-                    <button type="submit" class="btn-primary">Publish Ad</button>
-                </div>
-            </form>
+            </section>
         </div>
     </main>
 
-    <script type="module" src="js/trustsell.js"></script>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="chat.html" class="nav-item">
+            <span>💬</span>
+            <span>Chat</span>
+        </a>
+        <a href="sell.html" class="nav-item active">
+            <span>➕</span>
+            <span>Sell</span>
+        </a>
+        <a href="my-ads.html" class="nav-item">
+            <span>📰</span>
+            <span>My Ads</span>
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>👤</span>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <script src="js/trustsell.js"></script>
 </body>
 </html>
