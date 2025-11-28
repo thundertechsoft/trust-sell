@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell on TrustSell - Post Your Ad</title>
     <meta name="description" content="Sell your items quickly on TrustSell. Post ads for mobiles, vehicles, property, electronics and more in Pakistan.">
-    <link rel="stylesheet" href="css/trustsell.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -14,8 +15,8 @@
                 <div class="logo">
                     <h1>TrustSell</h1>
                 </div>
-                <div class="page-title">
-                    <h2>Sell</h2>
+                <div class="header-actions">
+                    <a href="login.html" class="auth-btn">Login</a>
                 </div>
             </div>
         </div>
@@ -23,190 +24,126 @@
 
     <main class="main-content">
         <div class="container">
-            <section class="popular-categories-section">
-                <h3>Popular Categories</h3>
-                <div class="category-list">
-                    <div class="category-item" onclick="selectCategory('mobiles')">
-                        <div class="category-icon">📱</div>
-                        <div class="category-info">
-                            <span class="category-name">Mobiles</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('vehicles')">
-                        <div class="category-icon">🚗</div>
-                        <div class="category-info">
-                            <span class="category-name">Vehicles</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('property-sale')">
-                        <div class="category-icon">🏠</div>
-                        <div class="category-info">
-                            <span class="category-name">Property for Sale</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('property-rent')">
-                        <div class="category-icon">🏡</div>
-                        <div class="category-info">
-                            <span class="category-name">Property for Rent</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <div class="page-header">
+                <h1>Sell on TrustSell</h1>
+                <p>Choose a category for your item</p>
+            </div>
 
-            <section class="all-categories-section">
-                <h3>All Categories</h3>
-                <div class="category-list">
-                    <div class="category-item" onclick="selectCategory('electronics')">
-                        <div class="category-icon">📺</div>
-                        <div class="category-info">
-                            <span class="category-name">Electronics & Home Appliances</span>
-                            <span class="category-chevron">›</span>
+            <div class="sell-categories">
+                <section class="category-section">
+                    <h2 class="section-title">Popular Categories</h2>
+                    <div class="categories-grid">
+                        <div class="category-card large" onclick="selectCategory('mobiles')">
+                            <div class="category-icon">📱</div>
+                            <div class="category-info">
+                                <h3>Mobiles</h3>
+                                <p>Smartphones, Tablets, Accessories</p>
+                            </div>
+                        </div>
+                        <div class="category-card large" onclick="selectCategory('vehicles')">
+                            <div class="category-icon">🚗</div>
+                            <div class="category-info">
+                                <h3>Vehicles</h3>
+                                <p>Cars, Bikes, Commercial Vehicles</p>
+                            </div>
+                        </div>
+                        <div class="category-card large" onclick="selectCategory('property-sale')">
+                            <div class="category-icon">🏠</div>
+                            <div class="category-info">
+                                <h3>Property for Sale</h3>
+                                <p>Houses, Plots, Commercial</p>
+                            </div>
+                        </div>
+                        <div class="category-card large" onclick="selectCategory('property-rent')">
+                            <div class="category-icon">🏡</div>
+                            <div class="category-info">
+                                <h3>Property for Rent</h3>
+                                <p>Apartments, Houses, Shops</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="category-item" onclick="selectCategory('bikes')">
-                        <div class="category-icon">🏍️</div>
-                        <div class="category-info">
-                            <span class="category-name">Bikes</span>
-                            <span class="category-chevron">›</span>
+                </section>
+
+                <section class="category-section">
+                    <h2 class="section-title">All Categories</h2>
+                    <div class="categories-list">
+                        <div class="category-item" onclick="selectCategory('electronics')">
+                            <div class="category-icon">📺</div>
+                            <div class="category-details">
+                                <h4>Electronics & Home Appliances</h4>
+                                <p>TVs, ACs, Refrigerators, Kitchen Appliances</p>
+                            </div>
+                            <span class="category-arrow">›</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('bikes')">
+                            <div class="category-icon">🏍️</div>
+                            <div class="category-details">
+                                <h4>Bikes</h4>
+                                <p>Motorcycles, Scooters, Sports Bikes</p>
+                            </div>
+                            <span class="category-arrow">›</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('jobs')">
+                            <div class="category-icon">💼</div>
+                            <div class="category-details">
+                                <h4>Jobs</h4>
+                                <p>IT, Marketing, Sales, Healthcare</p>
+                            </div>
+                            <span class="category-arrow">›</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('services')">
+                            <div class="category-icon">🔧</div>
+                            <div class="category-details">
+                                <h4>Services</h4>
+                                <p>Home Repair, Moving, Cleaning</p>
+                            </div>
+                            <span class="category-arrow">›</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('furniture')">
+                            <div class="category-icon">🛋️</div>
+                            <div class="category-details">
+                                <h4>Furniture & Home</h4>
+                                <p>Sofas, Beds, Tables, Decor</p>
+                            </div>
+                            <span class="category-arrow">›</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('fashion')">
+                            <div class="category-icon">👕</div>
+                            <div class="category-details">
+                                <h4>Fashion & Beauty</h4>
+                                <p>Clothing, Shoes, Watches, Cosmetics</p>
+                            </div>
+                            <span class="category-arrow">›</span>
                         </div>
                     </div>
-                    <div class="category-item" onclick="selectCategory('business')">
-                        <div class="category-icon">🏢</div>
-                        <div class="category-info">
-                            <span class="category-name">Business, Industrial & Agriculture</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('services')">
-                        <div class="category-icon">🔧</div>
-                        <div class="category-info">
-                            <span class="category-name">Services</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('jobs')">
-                        <div class="category-icon">💼</div>
-                        <div class="category-info">
-                            <span class="category-name">Jobs</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('animals')">
-                        <div class="category-icon">🐕</div>
-                        <div class="category-info">
-                            <span class="category-name">Animals</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('fashion')">
-                        <div class="category-icon">👕</div>
-                        <div class="category-info">
-                            <span class="category-name">Fashion & Beauty</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('furniture')">
-                        <div class="category-icon">🛋️</div>
-                        <div class="category-info">
-                            <span class="category-name">Furniture & Home</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('computers')">
-                        <div class="category-icon">💻</div>
-                        <div class="category-info">
-                            <span class="category-name">Computers & IT</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('books')">
-                        <div class="category-icon">📚</div>
-                        <div class="category-info">
-                            <span class="category-name">Books & Stationery</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('kids')">
-                        <div class="category-icon">🧸</div>
-                        <div class="category-info">
-                            <span class="category-name">Kids & Toys</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('sports')">
-                        <div class="category-icon">⚽</div>
-                        <div class="category-info">
-                            <span class="category-name">Sports & Outdoors</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('home-garden')">
-                        <div class="category-icon">🌿</div>
-                        <div class="category-info">
-                            <span class="category-name">Home & Garden</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('photography')">
-                        <div class="category-icon">📷</div>
-                        <div class="category-info">
-                            <span class="category-name">Photography & Media</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('hobbies')">
-                        <div class="category-icon">🎵</div>
-                        <div class="category-info">
-                            <span class="category-name">Hobbies & Music</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('health')">
-                        <div class="category-icon">💊</div>
-                        <div class="category-info">
-                            <span class="category-name">Health & Wellness</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                    <div class="category-item" onclick="selectCategory('local-services')">
-                        <div class="category-icon">⚖️</div>
-                        <div class="category-info">
-                            <span class="category-name">Local Services</span>
-                            <span class="category-chevron">›</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
     </main>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item">
-            <span>🏠</span>
-            <span>Home</span>
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
         </a>
         <a href="chat.html" class="nav-item">
-            <span>💬</span>
-            <span>Chat</span>
+            <span class="nav-icon">💬</span>
+            <span class="nav-label">Chat</span>
         </a>
         <a href="sell.html" class="nav-item active">
-            <span>➕</span>
-            <span>Sell</span>
+            <span class="nav-icon">➕</span>
+            <span class="nav-label">Sell</span>
         </a>
         <a href="my-ads.html" class="nav-item">
-            <span>📰</span>
-            <span>My Ads</span>
+            <span class="nav-icon">📰</span>
+            <span class="nav-label">My Ads</span>
         </a>
         <a href="account.html" class="nav-item">
-            <span>👤</span>
-            <span>Account</span>
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Account</span>
         </a>
     </nav>
 
-    <script src="js/trustsell.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
