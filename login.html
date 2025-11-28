@@ -5,73 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TrustSell</title>
     <meta name="description" content="Login to your TrustSell account to buy and sell securely in Pakistan.">
-    <link rel="stylesheet" href="css/trustsell.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-card">
-            <h1>Login into your TrustSell account</h1>
-            
-            <button class="social-login-btn google-login">
-                <span>Login with Google</span>
-            </button>
-            
-            <button class="social-login-btn facebook-login">
-                <span>Login with Facebook</span>
-            </button>
-            
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-header">
+            <a href="index.html" class="logo">TrustSell</a>
+            <h1>Welcome Back</h1>
+            <p>Sign in to your TrustSell account</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="social-login">
+                <button class="social-btn google-btn" id="googleLogin">
+                    <span class="social-icon">🔍</span>
+                    Continue with Google
+                </button>
+                <button class="social-btn facebook-btn" id="facebookLogin">
+                    <span class="social-icon">f</span>
+                    Continue with Facebook
+                </button>
+            </div>
+
             <div class="divider">
                 <span>OR</span>
             </div>
-            
-            <button class="login-option-btn" onclick="showEmailLogin()">
-                <span>Login with Email</span>
-            </button>
-            
-            <button class="login-option-btn" onclick="showPhoneLogin()">
-                <span>Login with Phone</span>
-            </button>
-            
-            <div class="signup-prompt">
-                <p>New to TrustSell? <a href="#" onclick="showSignup()">Create an account</a></p>
+
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>New to TrustSell? <a href="#" id="showSignup">Create an account</a></p>
             </div>
         </div>
 
-        <!-- Email Login Form -->
-        <div id="emailLoginForm" class="login-form hidden">
-            <h2>Login with Email</h2>
-            <form id="emailForm">
-                <input type="email" placeholder="Enter your email" required>
-                <input type="password" placeholder="Enter your password" required>
-                <button type="submit" class="btn-primary">Login</button>
-            </form>
-            <button class="btn-secondary" onclick="hideEmailLogin()">Back</button>
-        </div>
+        <!-- Signup Form (Hidden by default) -->
+        <div class="auth-card hidden" id="signupCard">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join TrustSell today</p>
+            </div>
 
-        <!-- Phone Login Form -->
-        <div id="phoneLoginForm" class="login-form hidden">
-            <h2>Login with Phone</h2>
-            <form id="phoneForm">
-                <input type="tel" placeholder="Enter your phone number" required>
-                <button type="submit" class="btn-primary">Send OTP</button>
-            </form>
-            <button class="btn-secondary" onclick="hidePhoneLogin()">Back</button>
-        </div>
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                </div>
 
-        <!-- Signup Form -->
-        <div id="signupForm" class="login-form hidden">
-            <h2>Create Account</h2>
-            <form id="signupFormElement">
-                <input type="text" placeholder="Full Name" required>
-                <input type="email" placeholder="Email" required>
-                <input type="tel" placeholder="Phone Number" required>
-                <input type="password" placeholder="Create Password" required>
-                <button type="submit" class="btn-primary">Create Account</button>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" name="email" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" name="password" required placeholder="Create a password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
             </form>
-            <button class="btn-secondary" onclick="hideSignup()">Back</button>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" id="showLogin">Sign in</a></p>
+            </div>
         </div>
     </div>
 
-    <script src="js/trustsell.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
