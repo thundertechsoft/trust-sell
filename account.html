@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - TrustSell</title>
     <meta name="description" content="Manage your TrustSell account, orders, favorites, and settings.">
-    <link rel="stylesheet" href="css/trustsell.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -14,8 +15,8 @@
                 <div class="logo">
                     <h1>TrustSell</h1>
                 </div>
-                <div class="page-title">
-                    <h2>Account</h2>
+                <div class="header-actions">
+                    <a href="login.html" class="auth-btn">Login</a>
                 </div>
             </div>
         </div>
@@ -23,97 +24,159 @@
 
     <main class="main-content">
         <div class="container">
-            <section class="profile-section">
-                <div class="profile-header">
-                    <div class="profile-avatar">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMwMDc4ZDQiLz48dGV4dCB4PSI0MCIgeT0iNDgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QVI=</div>
-                    <div class="profile-info">
-                        <h3>Ahmed Raza</h3>
-                        <button class="view-profile-btn">View Public Profile</button>
+            <div class="page-header">
+                <h1>My Account</h1>
+            </div>
+
+            <div class="account-content">
+                <section class="profile-section">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiMwMDc4ZDQiLz48dGV4dCB4PSI0MCIgeT0iNDgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QVI=" alt="Avatar">
+                            </div>
+                            <div class="profile-info">
+                                <h2>Ahmed Raza</h2>
+                                <p>Member since 2022</p>
+                                <button class="btn btn-outline">Edit Profile</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="account-grid">
-                <div class="grid-item">
-                    <div class="grid-icon">📦</div>
-                    <span>Orders</span>
-                </div>
-                <div class="grid-item">
-                    <div class="grid-icon">❤️</div>
-                    <span>Favorites</span>
-                </div>
-                <div class="grid-item">
-                    <div class="grid-icon">🛒</div>
-                    <span>Cart</span>
-                </div>
-            </section>
+                <section class="account-stats">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-info">
+                                <h3>12</h3>
+                                <p>Active Ads</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">❤️</div>
+                            <div class="stat-info">
+                                <h3>8</h3>
+                                <p>Favorites</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👁️</div>
+                            <div class="stat-info">
+                                <h3>245</h3>
+                                <p>Profile Views</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-info">
+                                <h3>4.8</h3>
+                                <p>Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-            <section class="promo-banner">
-                <div class="banner-content">
-                    <h4>Buy Discounted Packages</h4>
-                    <p>More Credits, More Savings. Grab Discounted Packages Today!</p>
-                    <button class="banner-btn">View Packages</button>
-                </div>
-            </section>
+                <section class="account-menu">
+                    <div class="menu-section">
+                        <h3 class="menu-title">My Activities</h3>
+                        <div class="menu-items">
+                            <a href="my-ads.html" class="menu-item">
+                                <span class="menu-icon">📰</span>
+                                <span class="menu-text">My Ads</span>
+                                <span class="menu-badge">12</span>
+                            </a>
+                            <a href="favorites.html" class="menu-item">
+                                <span class="menu-icon">❤️</span>
+                                <span class="menu-text">Favorites</span>
+                                <span class="menu-badge">8</span>
+                            </a>
+                            <a href="chat.html" class="menu-item">
+                                <span class="menu-icon">💬</span>
+                                <span class="menu-text">Messages</span>
+                                <span class="menu-badge">5</span>
+                            </a>
+                        </div>
+                    </div>
 
-            <section class="account-menu">
-                <div class="menu-item">
-                    <span class="menu-icon">💳</span>
-                    <span>Payment Options</span>
-                    <span class="menu-chevron">›</span>
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">📍</span>
-                    <span>Addresses</span>
-                    <span class="menu-chevron">›</span>
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">📝</span>
-                    <span>Blogs</span>
-                    <span class="menu-chevron">›</span>
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">⚙️</span>
-                    <span>Settings</span>
-                    <span class="menu-chevron">›</span>
-                </div>
-                <div class="menu-item">
-                    <span class="menu-icon">❓</span>
-                    <span>Help</span>
-                    <span class="menu-chevron">›</span>
-                </div>
-                <div class="menu-item logout">
-                    <span class="menu-icon">🚪</span>
-                    <span>Logout</span>
-                </div>
-            </section>
+                    <div class="menu-section">
+                        <h3 class="menu-title">Account Settings</h3>
+                        <div class="menu-items">
+                            <a href="profile-settings.html" class="menu-item">
+                                <span class="menu-icon">👤</span>
+                                <span class="menu-text">Profile Settings</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            <a href="payment-methods.html" class="menu-item">
+                                <span class="menu-icon">💳</span>
+                                <span class="menu-text">Payment Methods</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            <a href="notifications.html" class="menu-item">
+                                <span class="menu-icon">🔔</span>
+                                <span class="menu-text">Notifications</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            <a href="privacy.html" class="menu-item">
+                                <span class="menu-icon">🔒</span>
+                                <span class="menu-text">Privacy & Security</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3 class="menu-title">Support</h3>
+                        <div class="menu-items">
+                            <a href="help.html" class="menu-item">
+                                <span class="menu-icon">❓</span>
+                                <span class="menu-text">Help Center</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                            <a href="contact.html" class="menu-item">
+                                <span class="menu-icon">📞</span>
+                                <span class="menu-text">Contact Support</span>
+                                <span class="menu-arrow">›</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-section">
+                        <div class="menu-items">
+                            <button class="menu-item logout-btn" id="logoutBtn">
+                                <span class="menu-icon">🚪</span>
+                                <span class="menu-text">Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
     </main>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item">
-            <span>🏠</span>
-            <span>Home</span>
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
         </a>
         <a href="chat.html" class="nav-item">
-            <span>💬</span>
-            <span>Chat</span>
+            <span class="nav-icon">💬</span>
+            <span class="nav-label">Chat</span>
         </a>
         <a href="sell.html" class="nav-item">
-            <span>➕</span>
-            <span>Sell</span>
+            <span class="nav-icon">➕</span>
+            <span class="nav-label">Sell</span>
         </a>
         <a href="my-ads.html" class="nav-item">
-            <span>📰</span>
-            <span>My Ads</span>
+            <span class="nav-icon">📰</span>
+            <span class="nav-label">My Ads</span>
         </a>
         <a href="account.html" class="nav-item active">
-            <span>👤</span>
-            <span>Account</span>
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Account</span>
         </a>
     </nav>
 
-    <script src="js/trustsell.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
