@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrustSell - Buy & Sell Everything in Pakistan</title>
     <meta name="description" content="Pakistan's fastest growing classifieds marketplace. Buy and sell mobiles, cars, property, electronics, jobs, services and more with trust and safety.">
-    <link rel="stylesheet" href="css/trustsell.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
@@ -18,86 +19,110 @@
                     <input type="text" placeholder="Search for electronics & appliances" id="searchInput">
                     <button class="search-btn">Search</button>
                 </div>
+                <div class="header-actions">
+                    <a href="login.html" class="auth-btn">Login</a>
+                    <a href="sell.html" class="sell-btn">Sell Now</a>
+                </div>
             </div>
         </div>
     </header>
 
-    <nav class="menu-shortcuts">
+    <nav class="main-nav">
         <div class="container">
-            <div class="shortcuts">
-                <a href="categories.html" class="shortcut">Categories</a>
-                <a href="#popular-categories" class="shortcut">Popular Categories</a>
-                <a href="#trending" class="shortcut">Trending Searches</a>
-                <a href="about.html" class="shortcut">About Us</a>
-                <a href="#app" class="shortcut">TrustSell App</a>
+            <div class="nav-links">
+                <a href="categories.html" class="nav-link">Categories</a>
+                <a href="#popular-categories" class="nav-link">Popular</a>
+                <a href="#trending" class="nav-link">Trending</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="#app" class="nav-link">App</a>
             </div>
         </div>
     </nav>
 
     <main class="main-content">
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Buy & Sell Everything in Pakistan</h1>
+                    <p class="hero-subtitle">Trusted by millions • Safe transactions • Fast delivery</p>
+                    <div class="hero-actions">
+                        <a href="sell.html" class="btn btn-primary">Start Selling</a>
+                        <a href="categories.html" class="btn btn-secondary">Browse Categories</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="banner-section">
             <div class="container">
                 <div class="banner-ad">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlRydXN0U2VsbCBCYW5uZXIgQWR2ZXJ0aXNlbWVudDwvdGV4dD48L3N2Zz4=" alt="TrustSell Promotional Banner">
+                    <div class="banner-content">
+                        <h3>TrustSell Premium</h3>
+                        <p>Get your items sold faster with premium features</p>
+                        <button class="btn btn-outline">Learn More</button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="popular-categories" class="categories-section">
             <div class="container">
-                <h2>Popular Categories</h2>
+                <h2 class="section-title">Popular Categories</h2>
                 <div class="categories-grid">
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('mobiles')">
                         <div class="category-icon">📱</div>
-                        <span>Mobiles</span>
+                        <span class="category-name">Mobiles</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('vehicles')">
                         <div class="category-icon">🚗</div>
-                        <span>Vehicles</span>
+                        <span class="category-name">Vehicles</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('property-sale')">
                         <div class="category-icon">🏠</div>
-                        <span>Property Sale</span>
+                        <span class="category-name">Property Sale</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('property-rent')">
                         <div class="category-icon">🏡</div>
-                        <span>Property Rent</span>
+                        <span class="category-name">Property Rent</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('jobs')">
                         <div class="category-icon">💼</div>
-                        <span>Jobs</span>
+                        <span class="category-name">Jobs</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('services')">
                         <div class="category-icon">🔧</div>
-                        <span>Services</span>
+                        <span class="category-name">Services</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('electronics')">
                         <div class="category-icon">📺</div>
-                        <span>Electronics</span>
+                        <span class="category-name">Electronics</span>
                     </div>
-                    <div class="category-card">
+                    <div class="category-card" onclick="selectCategory('furniture')">
                         <div class="category-icon">🛋️</div>
-                        <span>Furniture</span>
+                        <span class="category-name">Furniture</span>
                     </div>
                 </div>
                 <div class="browse-all">
-                    <a href="categories.html" class="btn-secondary">Browse All Categories</a>
+                    <a href="categories.html" class="btn btn-outline">Browse All Categories</a>
                 </div>
             </div>
         </section>
 
         <section class="featured-listings">
             <div class="container">
-                <h2>Featured Listings</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Featured Listings</h2>
+                    <a href="search-results.html" class="view-all">View All</a>
+                </div>
                 <div class="listings-grid" id="featuredListings">
-                    <!-- Real listings will be loaded from Firebase -->
+                    <!-- Listings loaded from Firebase -->
                 </div>
             </div>
         </section>
 
         <section id="trending" class="trending-section">
             <div class="container">
-                <h2>Trending Searches</h2>
+                <h2 class="section-title">Trending Searches</h2>
                 <div class="trending-chips">
                     <span class="chip">iPhone</span>
                     <span class="chip">Honda Civic</span>
@@ -114,17 +139,17 @@
         <section id="app" class="app-section">
             <div class="container">
                 <div class="app-promo">
-                    <h2>Get the TrustSell App</h2>
-                    <p>Buy and sell faster with our mobile app</p>
-                    <button class="play-store-btn">
-                        <span>GET IT ON</span>
-                        <span>Google Play</span>
-                    </button>
-                    <div class="social-icons">
-                        <a href="#" class="social-icon">𝕏</a>
-                        <a href="#" class="social-icon">f</a>
-                        <a href="#" class="social-icon">▶</a>
-                        <a href="#" class="social-icon">📷</a>
+                    <div class="app-content">
+                        <h2>Get the TrustSell App</h2>
+                        <p>Buy and sell faster with our mobile app</p>
+                        <button class="app-store-btn">
+                            <span>GET IT ON</span>
+                            <span>Google Play</span>
+                        </button>
+                    </div>
+                    <div class="app-image">
+                        <!-- App screenshot placeholder -->
+                        <div class="phone-mockup"></div>
                     </div>
                 </div>
             </div>
@@ -133,42 +158,61 @@
 
     <footer class="footer">
         <div class="container">
-            <div class="footer-links">
-                <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
-                <a href="terms.html">Terms</a>
-                <a href="privacy.html">Privacy</a>
-                <a href="help.html">Help</a>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TrustSell</h3>
+                    <p>Pakistan's trusted marketplace for buying and selling everything.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="help.html">Help & Support</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="sitemap.html">Sitemap</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Twitter</a>
+                        <a href="#" class="social-link">Instagram</a>
+                    </div>
+                </div>
             </div>
-            <div class="footer-copyright">
-                <p>Classifieds in Pakistan. © TrustSell</p>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TrustSell. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <span>🏠</span>
-            <span>Home</span>
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
         </a>
         <a href="chat.html" class="nav-item">
-            <span>💬</span>
-            <span>Chat</span>
+            <span class="nav-icon">💬</span>
+            <span class="nav-label">Chat</span>
         </a>
-        <a href="sell.html" class="nav-item active">
-            <span>➕</span>
-            <span>Sell</span>
+        <a href="sell.html" class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span class="nav-label">Sell</span>
         </a>
         <a href="my-ads.html" class="nav-item">
-            <span>📰</span>
-            <span>My Ads</span>
+            <span class="nav-icon">📰</span>
+            <span class="nav-label">My Ads</span>
         </a>
         <a href="account.html" class="nav-item">
-            <span>👤</span>
-            <span>Account</span>
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Account</span>
         </a>
     </nav>
 
-    <script src="js/trustsell.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
